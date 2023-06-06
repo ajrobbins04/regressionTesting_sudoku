@@ -16,8 +16,7 @@
 #include <string>
 using namespace std;
 
-void getFileName(char fileName[], bool readIn);
-bool readFile(int board[][9], char fileName[]);
+bool readFile(int board[][9], string fileName);
 void displayOptions();
 void displayBoard(int board[][9]);
 string getCoordinates();
@@ -27,7 +26,7 @@ void computeValues(int board[][9], int possible[], int row, int col);
 void displayPossibleValues(int board[][9]);
 void editSquare(int board[][9]);
 bool interact(int board[][9]);
-bool writeFile(int board[][9], char newFile[]);
+bool writeFile(int board[][9], string newFile);
 
 /**********************************************************************
  * MAIN
@@ -38,10 +37,9 @@ int main()
 {
    int board[9][9]; // stores sudoku board
    
-   char fileName[256]; // serves 2 purposes: reads
-					   // from and writes to file
-   
-   getFileName(fileName, true);
+   // serves 2 purposes: reads from and
+   // writes to file
+	string fileName = "/sudoku.txt";
 
 	 // read the file
    if (!readFile(board, fileName))
@@ -60,11 +58,7 @@ int main()
    
    // play sudoku until user enters 'Q'
    while (interact(board));
-
-   // write to new file
-   getFileName(fileName, false);
  
-
    // program closes after file is successfully written
    if (!writeFile(board, fileName))
 	  cout << "ERROR: unable to open " << fileName << endl;
@@ -75,27 +69,12 @@ int main()
    
 }
 
-/**********************************************************************
- * GET FILE NAME
- * Gets the name of the file containing the sudoku game, or
- * it gets the name of the file that the game will be written to.
- ***********************************************************************/
-void getFileName(char fileName[], bool readIn)
-{
-   // if readIn is true, get the fileName containing the sudoku game
-   // if false, get the fileName that the game will be written to
-   cout << (readIn ? "Where is your board located? ":
-			"What file would you like to write your board to: " );
-   cin >> fileName;
-   
-}
-
 /***********************************************************************
  * READ FILE
  * Moves the sudoku data from its file to the
  * board array.
  ***********************************************************************/
-bool readFile(int board[][9], char fileName[])
+bool readFile(int board[][9], string fileName)
 {
    // open file
    ifstream fin(fileName);
@@ -438,7 +417,7 @@ bool interact(int board[][9])
  * WRITE BOARD
  * Write the sudoku board to its destination file.
  ***********************************************************************/
-bool writeFile(int board[][9], char newFile[])
+bool writeFile(int board[][9], string newFile)
 {
    // open file
    ofstream fout(newFile);
@@ -461,3 +440,4 @@ bool writeFile(int board[][9], char newFile[])
    fout.close();
    return true;
 }
+
