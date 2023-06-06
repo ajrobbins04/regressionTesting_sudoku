@@ -39,7 +39,7 @@ int main()
    
    // serves 2 purposes: reads from and
    // writes to file
-	string fileName = "/sudoku.txt";
+	string fileName = "/Users/AmberRobbins/CSE-270_softwareTesting/regressionTesting_sudoku/08-regressionTesting/sudoku.txt";
 
 	 // read the file
    if (!readFile(board, fileName))
