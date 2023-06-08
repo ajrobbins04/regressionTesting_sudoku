@@ -33,8 +33,12 @@ void editSquare(int board[][9]);
 string test_editSquare_invalidCoord(int board[][9], string coordinates, int row, int col); // For testing invalid coordinates
 string test_editSquare(int board[][9], string coordinates, int row, int col, int value); // For testing w/valid coord input
 bool interact(int board[][9]);
-bool test_interact(int board[][9], char input);           // for general testing purposes
+bool test_interact(int board[][9], char input);           // for testing when input != 'E'
+bool test_interact_inputE(int board[][9], char input,     // for testing when input  = 'E'
+						  string coordinates, int row,
+						  int col, int value);
 bool writeFile(int board[][9], string newFile);
+void test_updateBoard(int board[][9]);                    // test case 2
 void test_doubleNumInput(int board[][9]);                 // test case 3
 void test_doubleLetterInput(int board[][9]);              // test case 4
 void test_reverseInputOrder(int board[][9]);              // test case 5
@@ -68,7 +72,8 @@ int main()
     displayBoard(board);
     cout << endl;
 	
-	// run test cases 3 - 6
+	// run test cases 2 - 6
+	test_updateBoard(board);
 	test_doubleNumInput(board);
 	test_doubleLetterInput(board);
 	test_reverseInputOrder(board);
@@ -481,7 +486,7 @@ string test_editSquare(int board[][9], string coordinates, int row, int col, int
 	// add value to its coordinate location
 	board[row][col] = value;
 	
-	string pass = "The square at '" + coordinates + "' can be edited.";
+	string pass = "The square at '" + coordinates + "' was edited.";
 	return pass;
 }
  
@@ -528,7 +533,7 @@ bool interact(int board[][9])
 /***********************************************************************
 * TEST INTERACT
 * User chooses their input from a series of options. This version of interact is
-* used for testing purposes.
+* used for general testing purposes.
 ***********************************************************************/
 bool test_interact(int board[][9], char input)
 {
@@ -546,6 +551,42 @@ bool test_interact(int board[][9], char input)
 		return true;
 	 case 'E':
 		editSquare(board); // add new value onto board
+		cout << endl;
+		return true;
+	 case 'S':
+		displayPossibleValues(board); // show possible values
+		cout << endl;
+		return true;
+	 case 'Q': // Quit program
+		return false;
+	 default:
+		cout << "ERROR: invalid value\n";
+		return true;
+  }
+}
+
+/***********************************************************************
+* TEST INTERACT - INPUT 'E'
+* User chooses their input from a series of options. This version of interact is
+* used when the input must be 'E'
+ ************************************************************************/
+bool test_interact_inputE(int board[][9], char input, string coordinates,
+						  int row, int col, int value)
+{
+  char inputCaps = toupper(input);
+
+  switch (inputCaps)
+  {
+	 case '?':
+		displayOptions(); // show list of options
+		cout << endl << endl;
+		return true;
+	 case 'D':
+		displayBoard(board); // show sudoku board
+		cout << endl;
+		return true;
+	 case 'E':
+		test_editSquare(board, coordinates, row, col, value);
 		cout << endl;
 		return true;
 	 case 'S':
@@ -598,8 +639,32 @@ void test_displayBoard()
 /***********************************************************************
  *  TEST CASE 2: UPDATE BOARD
  ***********************************************************************/
-void test_updateBoard()
+void test_updateBoard(int board[][9])
 {
+	char input = 'E';
+	string coordinates = "E1";
+	
+	int row;
+	int col;
+	setRowCol(coordinates, row, col);
+	
+	int value = 4;
+	test_interact_inputE(board, input, coordinates, row, col, value);
+	
+	input = 'D';
+	test_interact(board, input);
+	
+	assert(board[row][col] == 4);
+	
+	if (board[row][col] == 4)
+	{
+		cout << "4 was added to square 'E1'.\nTest Case 2 has passed.\n\n";
+	}
+	else
+		cout << "Test Case 2 has Failed.\n\n";
+	
+	
+ 
 	
 }
 /***********************************************************************
@@ -610,19 +675,17 @@ void test_doubleNumInput(int board[][9])
 	
 	string coordinates = "11";
  
-	// -1 = default temporary value
-	int row = -1;
-	int col = -1;
-
+	int row;
+	int col;
 	setRowCol(coordinates, row, col);
 	
-	// attempts to edit at coordinate 11 - which is invalid
+	// must check if coord is valid before editing it
 	string msg = test_editSquare_invalidCoord(board, coordinates, row, col);
 	
 	assert(msg == "ERROR: Square '11' is invalid.");
 	
 	if (msg == "ERROR: Square '11' is invalid.")
-		cout << "Test Case 3 has Passed.\n\n";
+		cout << "Square '11' is invalid.\nTest Case 3 has Passed.\n\n";
 	else
 		cout << "Test Case 3 has Failed.\n\n";
   
@@ -634,19 +697,17 @@ void test_doubleLetterInput(int board[][9])
 {
 	string coordinates = "BB";
  
-	// -1 = default temporary value
-	int row = -1;
-	int col = -1;
-
+	int row;
+	int col;
 	setRowCol(coordinates, row, col);
 	
-	// attempts to edit at coordinate BB - which is invalid
+	// must check if coord is valid before editing it
 	string msg = test_editSquare_invalidCoord(board, coordinates, row, col);
 	
 	assert(msg == "ERROR: Square 'BB' is invalid.");
 	
 	if (msg == "ERROR: Square 'BB' is invalid.")
-		cout << "Test Case 4 has Passed.\n\n";
+		cout << "Square 'BB' is invalid.\nTest Case 4 has Passed.\n\n";
 	else
 		cout << "Test Case 4 has Failed.\n\n";
 }
@@ -657,24 +718,22 @@ void test_reverseInputOrder(int board[][9])
 {
 	// given in reverse order
 	string coordinates = "2B";
- 
-	// -1 = default temporary value
-	int row = -1;
-	int col = -1;
 
+	int row;
+	int col;
 	setRowCol(coordinates, row, col);
 	
-	// is a valid value. Should be added to board in
-	// test_editSquare since coordinate is valid
 	int value = 1;
 
+	// must check if coord is valid before editing it.
+	// value is included in parameter b/c coord can be edited, so it needs a value.
 	string msg = test_editSquare(board, coordinates, row, col, value);
 	
 	// check that coordinate order is fixed.
-	assert(msg == "The square at 'B2' can be edited.");
+	assert(msg == "The square at 'B2' was edited.");
 	
-	if (msg == "The square at 'B2' can be edited.")
-		cout << "Test Case 5 has Passed.\n" << msg << "\n\n";
+	if (msg == "The square at 'B2' was edited.")
+		cout << msg << "\nTest Case 5 has Passed.\n\n";
 	else
 		cout << "Test Case 5 has Failed.\n\n";
 }
@@ -687,10 +746,8 @@ void test_filledCoordinate(int board[][9])
 	// not valid b/c B1 is already filled
 	string coordinates = "B1";
  
-	// -1 = default temporary value
-	int row = -1;
-	int col = -1;
-
+	int row;
+	int col;
 	setRowCol(coordinates, row, col);
  
 	string msg = test_editSquare_invalidCoord(board, coordinates, row, col);
@@ -699,10 +756,11 @@ void test_filledCoordinate(int board[][9])
 	assert(msg == "ERROR: Square 'B1' is filled.");
 	
 	if (msg == "ERROR: Square 'B1' is filled.")
-		cout << "Test Case 6 has Passed.\nSquare 'B1' is filled.\n\n";
+		cout << "Square 'B1' is filled.\nTest Case 6 has Passed.\n\n";
 	else
 		cout << "Test Case 6 has Failed.\n\n";
 }
+
 /***********************************************************************
  *  TEST CASE 7
  ***********************************************************************/
