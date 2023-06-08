@@ -27,13 +27,17 @@ void computeValues(int board[][9], int possible[], int row, int col);
 void displayPossibleValues(int board[][9]);
 int getRow(string coordinates);
 int getCol(string coordinates);
+void setRowCol(string &coordinates, int &row, int &col);
 int promptValue(string coordinates);
 void editSquare(int board[][9]);
-string test_editSquare(int board[][9], string coordinates, int row, int col); // for general testing purposes
+string test_editSquare_invalidCoord(int board[][9], string coordinates, int row, int col); // For testing invalid coordinates
+string test_editSquare(int board[][9], string coordinates, int row, int col, int value); // For testing purposes w/valid coord
 bool interact(int board[][9]);
 bool test_interact(int board[][9], char input);           // for general testing purposes
 bool writeFile(int board[][9], string newFile);
-void test_doubleNumInput(int board[][9]);                 // test case 1
+void test_doubleNumInput(int board[][9]);                 // test case 3
+void test_doubleLetterInput(int board[][9]);              // test case 4
+void test_reverseInputOrder(int board[][9]);              // test case 5
 
 /**********************************************************************
  * MAIN
@@ -63,8 +67,10 @@ int main()
     displayBoard(board);
     cout << endl;
 	
-	// run test case 1
+	// run test cases 3 - 5
 	test_doubleNumInput(board);
+	test_doubleLetterInput(board);
+	test_reverseInputOrder(board);
    
    // play sudoku until user enters 'Q'
    while (interact(board));
@@ -253,128 +259,80 @@ void computeValues(int board[][9], int possible[], int row, int col)
  ***********************************************************************/
 void displayPossibleValues(int board[][9])
 {
-   char cRow;
-   char cCol;
-   int row;
-   int col;
-   
-   // get coordinates
-   string coordinates = getCoordinates();
-   
-   for (int i = 0; i < coordinates.length(); i++)
-   {
-	  if (isalpha(coordinates[0])) // if a1
-	  {
-		 cCol = toupper(coordinates[0]); // A
-		 cRow = toupper(coordinates[1]); // 1
-	  }
-	  else  // 1a
-	  {
-		 cCol = toupper(coordinates[1]); // A
-		 cRow = toupper(coordinates[0]); // 1
-	  }
-   }
-
-   // convert characters cRow and cCol
-   // to integer values row and col
-   row = int(cRow) - 49;
-   col = int(cCol) - 65;
-
-   // coordinates cannot be out of range
-   if (!isCoordValid(row, col))
-   {
-	  cout << "ERROR: Square '" << coordinates << "' is invalid\n";
-	  getCoordinates();
-   }
-
-  
-   int possible[9]; // array for storing possible values
-   computeValues(board, possible, row, col); // gets possible values
-
-   cout << "The possible values for '" << coordinates << "' are: ";
-   string values;
-
-   for (int i = 0; i < 9; i++)
-   {
-	  if (possible[i] != 0) //puts values in list form: 3, 5, 9
-	  {
-		 values += to_string(possible[i]) + ", ";
-	  }
-   }
-   values.pop_back(); //removes ", " after last value
-   values.pop_back();
-
-   cout << values << endl;
-}
-
-/***********************************************************************
- * GET ROW
- * Returns integer value of the row that corresponds to
- * the given coordinates.
- ***********************************************************************/
-int getRow(string coordinates)
-{
-	// N stands for nothing - cRow uninitialized
-	char cRow = 'N';
 	
-	// -1 stands for uninitialized int
+	// get coordinates
+	string coordinates = promptCoordinates();
+	
+	// -1 = default temporary value
 	int row = -1;
-	
-	for (int i = 0; i < coordinates.length(); i++)
-	{
-		// the row should always correspond to the
-		// coordinate number
-	   if (isalpha(coordinates[0])) // if a1 or A1
-	   {
-		  cRow = coordinates[1];
-	   }
-	   else  // 1a or 1A
-	   {
-		  cRow = coordinates[0];
-	   }
-	}
-	// convert cRow character to int using
-	// ASCII table
-	row = int(cRow) - 49;
+	int col = -1;
 
-	return row;
+	setRowCol(coordinates, row, col);
+ 
+	// coordinates cannot be out of range
+	if (!isCoordValid(row, col))
+	{
+		cout << "ERROR: Square '" << coordinates << "' is invalid.\n";
+		cout << "Press 'S' to try again.\n";
+		return;
+	}
+
+    int possible[9]; // array for storing possible values
+    computeValues(board, possible, row, col); // gets possible values
+
+    cout << "The possible values for '" << coordinates << "' are: ";
+    string values;
+
+    for (int i = 0; i < 9; i++)
+    {
+	   if (possible[i] != 0) //puts values in list form: 3, 5, 9
+	   {
+		  values += to_string(possible[i]) + ", ";
+	   }
+    }
+    values.pop_back(); //removes ", " after last value
+    values.pop_back();
+
+    cout << values << endl;
 }
 
 /***********************************************************************
- * GET COL
- * Returns integer value of the column that corresponds to
- * the given coordinates.
+ * SET ROW COLUMN
+ * Sets the integer value of the row and the column that each
+ * corresponds the given coordinates.
  ***********************************************************************/
-int getCol(string coordinates)
+void setRowCol(string &coordinates, int &row, int &col)
 {
-	// N stands for nothing - cCol uninitialized
-	char cCol = 'N';
-	
-	// -1 stands for uninitialized int
-	int col = -1;
-	
-	// the column should always correspond to the
-	// coordinate letter
-	for (int i = 0; i < coordinates.length(); i++)
+	char cRow;
+	char cCol;
+
+	if (isalpha(coordinates[0])) // if a1 or A1
 	{
-	   if (isalpha(coordinates[0])) // if a1 or A1
-	   {
-		  cCol = toupper(coordinates[0]); // A
-	   }
-	   else  // 1a or 1A
-	   {
-		  cCol = toupper(coordinates[1]); // A
-	   }
+		cCol = toupper(coordinates[0]); // A
+		cRow = coordinates[1]; // 1
 	}
-	
-	// convert cCol character to int using
-	// ASCII table
+	else  // 1a or 1A
+	{
+		cCol = toupper(coordinates[1]); // A
+		cRow = coordinates[0]; // 1
+	}
+
+
+	// convert characters cRow and cCol
+	// to integer values row and col
+	row = int(cRow) - 49;
 	col = int(cCol) - 65;
-
-	return col;
-
+	
+	
+	// correct coordinates order for otherwise valid coordinates.
+	if (isCoordValid(row, col) && isalpha(coordinates[1]))
+	{
+		coordinates = "";
+		coordinates += cCol;
+		coordinates += cRow;
+	}
 }
-
+ 
 /***********************************************************************
  * PROMPT VALUE
  * Returns the value that the user wants to place in a
@@ -402,21 +360,26 @@ void editSquare(int board[][9])
     // get coordinates
     string coordinates = promptCoordinates();
 	
-	int row = getRow(coordinates);
-	int col = getCol(coordinates);
+	// -1 = default temporary value
+	int row = -1;
+	int col = -1;
+
+	setRowCol(coordinates, row, col);
  
    // coordinates cannot be out of range
    if (!isCoordValid(row, col))
    {
-	   cout << "ERROR: Square '" << coordinates << "' is invalid\n";
+	   cout << "ERROR: Square '" << coordinates << "' is invalid.\n";
+	   cout << "Press 'E' to try again.\n";
 	   return;
    }
 
    // check if square is filled
    if (!isCoordFilled(row, col))
    {
-	  cout << "ERROR: Square '" << coordinates << "' is filled\n";
-	  return;
+	   cout << "ERROR: Square '" << coordinates << "' is filled.\n";
+	   cout << "Press 'E' to try again.\n";
+	   return;
    }
 	  
 	int value = promptValue(coordinates);
@@ -424,8 +387,9 @@ void editSquare(int board[][9])
    // check if value is in range
    if (value < 0 || value > 9)
    {
-	  cout << "ERROR: Value '" << value << "' in square '" << coordinates
-		   << "' is invalid\n";
+	   cout << "ERROR: Value '" << value << "' in square '" << coordinates
+		    << "' is invalid\n";
+	   cout << "Press 'E' to try again.\n";
 	  return;
    }
 
@@ -435,8 +399,9 @@ void editSquare(int board[][9])
 
    if (possible[value - 1] == 0) // index will be set to 0 if value is used
    {
-	  cout << "ERROR: Value '" << value << "' in square '" << coordinates
-		   << "' is invalid\n";
+	   cout << "ERROR: Value '" << value << "' in square '" << coordinates
+		    << "' is invalid\n";
+	   cout << "Press 'E' to try again.\n";
 	  return;
    }
 
@@ -448,31 +413,55 @@ void editSquare(int board[][9])
 /***********************************************************************
  * TEST EDIT SQUARE
  * Runs coordinates through a series of checks. This version of
- * editSquare is used for testing purposes.
+ * editSquare is used only when the provided coordinates are expected
+ * to fail (so it doesn't try to check possible values).
  ***********************************************************************/
-string test_editSquare(int board[][9], string coordinates, int row, int col)
+string test_editSquare_invalidCoord(int board[][9], string coordinates, int row, int col)
 {
    // coordinates cannot be out of range
    if (!isCoordValid(row, col))
    {
-	   string error = "ERROR: Square '" + coordinates + "' is invalid\n";
+	   string error = "ERROR: Square '" + coordinates + "' is invalid.";
 	   return error;
    }
 	
 	// check if square is filled
 	if (!isCoordFilled(row, col))
 	{
-		string error = "ERROR: Square '" + coordinates + "' is filled\n";
+		string error = "ERROR: Square '" + coordinates + "' is filled.";
 		return error;
     }
-	  
-	int value = promptValue(coordinates);
+
+	string pass = "The square at '" + coordinates + "' can be edited.";
+	return pass;
+}
+ 
+/***********************************************************************
+ * TEST EDIT SQUARE
+ * Runs coordinates through a series of checks. This version of
+ * editSquare is used for testing purposes.
+ ***********************************************************************/
+string test_editSquare(int board[][9], string coordinates, int row, int col, int value)
+{
+   // coordinates cannot be out of range
+   if (!isCoordValid(row, col))
+   {
+	   string error = "ERROR: Square '" + coordinates + "' is invalid.";
+	   return error;
+   }
+	
+	// check if square is filled
+	if (!isCoordFilled(row, col))
+	{
+		string error = "ERROR: Square '" + coordinates + "' is filled.";
+		return error;
+	}
 
    // check if value is in range
    if (value < 0 || value > 9)
    {
 	   string error = "ERROR: Value '" + std::to_string(value) + "' in square '" + coordinates
-	   + "' is invalid\n";
+	   + "' is invalid.";
 	   return error;
    }
 
@@ -483,14 +472,14 @@ string test_editSquare(int board[][9], string coordinates, int row, int col)
    if (possible[value - 1] == 0) // index will be set to 0 if value is used
    {
 	   string error = "ERROR: Value '" + std::to_string(value) + "' in square '" + coordinates
-	   + "' is invalid\n";
+	   + "' is invalid.";
 	   return error;
    }
 	
 	// add value to its coordinate location
-    board[row][col] = value;
+	board[row][col] = value;
 	
-	string pass = "The square can be edited\n";
+	string pass = "The square at '" + coordinates + "' can be edited.";
 	return pass;
 }
  
@@ -539,8 +528,7 @@ bool interact(int board[][9])
 * User chooses their input from a series of options. This version of interact is
 * used for testing purposes.
 ***********************************************************************/
-bool test_interact(int board[][9], char input, string coordinates,
-				   int row, int col)
+bool test_interact(int board[][9], char input)
 {
   char inputCaps = toupper(input);
 
@@ -619,15 +607,19 @@ void test_doubleNumInput(int board[][9])
 {
 	
 	string coordinates = "11";
-	int row = getRow(coordinates);
-	int col = getCol(coordinates);
+ 
+	// -1 = default temporary value
+	int row = -1;
+	int col = -1;
+
+	setRowCol(coordinates, row, col);
 	
 	// attempts to edit at coordinate 11 - which is invalid
-	string msg = test_editSquare(board, coordinates, row, col);
+	string msg = test_editSquare_invalidCoord(board, coordinates, row, col);
 	
-	assert(msg == "ERROR: Square '11' is invalid");
+	assert(msg == "ERROR: Square '11' is invalid.");
 	
-	if (msg == "ERROR: Square '11' is invalid")
+	if (msg == "ERROR: Square '11' is invalid.")
 		cout << "Test Case 3 has Passed." << endl;
 	else
 		cout << "Test Case 3 has Failed." << endl;
@@ -636,11 +628,54 @@ void test_doubleNumInput(int board[][9])
 /***********************************************************************
  *  TEST CASE 4: DOUBLE LETTER INPUT
  ***********************************************************************/
+void test_doubleLetterInput(int board[][9])
+{
+	string coordinates = "BB";
+ 
+	// -1 = default temporary value
+	int row = -1;
+	int col = -1;
 
+	setRowCol(coordinates, row, col);
+	
+	// attempts to edit at coordinate BB - which is invalid
+	string msg = test_editSquare_invalidCoord(board, coordinates, row, col);
+	
+	assert(msg == "ERROR: Square 'BB' is invalid.");
+	
+	if (msg == "ERROR: Square 'BB' is invalid.")
+		cout << "Test Case 4 has Passed." << endl;
+	else
+		cout << "Test Case 4 has Failed." << endl;
+}
 /***********************************************************************
  *  TEST CASE 5: REVERSE INPUT ORDER
  ***********************************************************************/
+void test_reverseInputOrder(int board[][9])
+{
+	// given in reverse order
+	string coordinates = "2B";
+ 
+	// -1 = default temporary value
+	int row = -1;
+	int col = -1;
 
+	setRowCol(coordinates, row, col);
+	
+	// is a valid value. Should be added to board in
+	// test_editSquare since coordinate is valid
+	int value = 1;
+
+	string msg = test_editSquare(board, coordinates, row, col, value);
+	
+	// check that coordinate order is fixed.
+	assert(msg == "The square at 'B2' can be edited.");
+	
+	if (msg == "The square at 'B2' can be edited.")
+		cout << "Test Case 5 has Passed." << endl;
+	else
+		cout << "Test Case 5 has Failed." << endl;
+}
 /***********************************************************************
  *  TEST CASE 6: FILLED COORDINATE
  ***********************************************************************/
