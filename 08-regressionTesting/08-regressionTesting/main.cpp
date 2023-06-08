@@ -31,16 +31,19 @@ void setRowCol(string &coordinates, int &row, int &col);
 int promptValue(string coordinates);
 void editSquare(int board[][9]);
 bool interact(int board[][9]);
+bool writeFile(int board[][9], string newFile);
 
-string test_editSquare_invalidCoord(int board[][9], string coordinates, int row, int col); // For testing invalid coordinates
+string test_displayPossibleValues(int board[][9], string coordinates, int row, int col, int value);
+string test_displayPossibleValues_invalidCoord(int board[][9], string coordinates, int row, int col);
+
 string test_editSquare(int board[][9], string coordinates, int row, int col, int value); // For testing w/valid coord input
+string test_editSquare_invalidCoord(int board[][9], string coordinates, int row, int col); // For testing invalid coordinates
 
 bool test_interact(int board[][9], char input);           // for testing when input != 'E'
 bool test_interact_inputE(int board[][9], char input,     // for testing when input  = 'E'
 						  string coordinates, int row,
 						  int col, int value);
 
-bool writeFile(int board[][9], string newFile);
 void test_updateBoard(int board[][9]);                    // test case 2
 void test_doubleNumInput(int board[][9]);                 // test case 3
 void test_doubleLetterInput(int board[][9]);              // test case 4
@@ -233,7 +236,6 @@ void computeValues(int board[][9], int possible[], int row, int col)
    for (int i = 0; i < 9; i++)
 	  possible[i] = i + 1; // indexes 0-8 hold values 1-9
 						   // index + 1 = the value it holds
-						   
 						 
    // check row
    for (int c = 0; c < 9; c++)
@@ -292,8 +294,19 @@ void displayPossibleValues(int board[][9])
 		return;
 	}
 
-    int possible[9]; // array for storing possible values
-    computeValues(board, possible, row, col); // gets possible values
+	// check if square is filled
+	if (isCoordFilled(board, row, col))
+	{
+		cout << "ERROR: Square '" << coordinates << "' is filled.\n";
+		cout << "Press 'S' to try again.\n";
+		return;
+	}
+	
+	// array for storing possible values
+    int possible[9];
+	
+	// populates possible array w/possible values
+    computeValues(board, possible, row, col);
 
     cout << "The possible values for '" << coordinates << "' are: ";
     string values;
@@ -464,31 +477,122 @@ bool interact(int board[][9])
 }
 
 /***********************************************************************
- * TEST EDIT SQUARE
- * Runs coordinates through a series of checks. This version of
- * editSquare is used only when the provided coordinates are expected
- * to fail (so it doesn't try to check possible values).
+ * WRITE FILE
+ * Write the sudoku board to its destination file.
  ***********************************************************************/
-string test_editSquare_invalidCoord(int board[][9], string coordinates, int row, int col)
+bool writeFile(int board[][9], string newFile)
 {
-   // coordinates cannot be out of range
-   if (!isCoordValid(row, col))
+   // open file
+   ofstream fout(newFile);
+   if (fout.fail())
    {
-	   string error = "ERROR: Square '" + coordinates + "' is invalid.";
-	   return error;
+	  fout.close();
+	  return false;
    }
-	
+   
+   // write to file
+   for (int row = 0; row < 9; row++)
+   {
+	  for (int col = 0; col < 9; col++)
+	  {
+		 
+		 fout << board[row][col] << " ";
+	  }
+   }
+   // close file
+   fout.close();
+   return true;
+}
+
+/***********************************************************************
+ * TEST DISPLAY POSSIBLE VALUES
+ * Runs coordinates through a series of checks before computing possible values.
+ * This version is used for testing purposes where a value is needed.
+ ***********************************************************************/
+string test_displayPossibleValues(int board[][9], string coordinates, int row, int col, int value)
+{
+ 
+	// coordinates cannot be out of range
+	if (!isCoordValid(row, col))
+	{
+		string error = "ERROR: Square '" + coordinates + "' is invalid.";
+		return error;
+	}
+
 	// check if square is filled
 	if (isCoordFilled(board, row, col))
 	{
 		string error = "ERROR: Square '" + coordinates + "' is filled.";
 		return error;
-    }
+	}
+	
+	// array for storing possible values
+	int possible[9];
+	
+	// populates possible array w/possible values
+	computeValues(board, possible, row, col);
 
-	string pass = "The square at '" + coordinates + "' can be edited.";
-	return pass;
+	cout << "The possible values for '" << coordinates << "' are: ";
+	string values;
+
+	for (int i = 0; i < 9; i++)
+	{
+	   if (possible[i] != 0) //puts values in list form: 3, 5, 9
+	   {
+		  values += to_string(possible[i]) + ", ";
+	   }
+	}
+	values.pop_back(); //removes ", " after last value
+	values.pop_back();
+	
+	return values;
 }
+
+/***********************************************************************
+ * TEST DISPLAY POSSIBLE VALUES - INVALID COORDINATE
+ * Runs coordinates through a series of checks before computing possible values.
+ * This version  is used only when the provided coordinates are expected
+ * to fail (so it doesn't try to check possible values).
+ ***********************************************************************/
+string test_displayPossibleValues_invalidCoord(int board[][9], string coordinates, int row, int col)
+{
  
+	// coordinates cannot be out of range
+	if (!isCoordValid(row, col))
+	{
+		string error = "ERROR: Square '" + coordinates + "' is invalid.";
+		return error;
+	}
+
+	// check if square is filled
+	if (isCoordFilled(board, row, col))
+	{
+		string error = "ERROR: Square '" + coordinates + "' is filled.";
+		return error;
+	}
+	
+	// array for storing possible values
+	int possible[9];
+	
+	// populates possible array w/possible values
+	computeValues(board, possible, row, col);
+
+	cout << "The possible values for '" << coordinates << "' are: ";
+	string values;
+
+	for (int i = 0; i < 9; i++)
+	{
+	   if (possible[i] != 0) //puts values in list form: 3, 5, 9
+	   {
+		  values += to_string(possible[i]) + ", ";
+	   }
+	}
+	values.pop_back(); //removes ", " after last value
+	values.pop_back();
+		
+	return values;
+}
+
 /***********************************************************************
  * TEST EDIT SQUARE
  * Runs coordinates through a series of checks. This version of
@@ -533,6 +637,32 @@ string test_editSquare(int board[][9], string coordinates, int row, int col, int
 	board[row][col] = value;
 	
 	string pass = "The square at '" + coordinates + "' was edited.";
+	return pass;
+}
+ 
+/***********************************************************************
+ * TEST EDIT SQUARE - INVALID COORDINATE
+ * Runs coordinates through a series of checks. This version of
+ * editSquare is used only when the provided coordinates are expected
+ * to fail (so it doesn't try to check possible values).
+ ***********************************************************************/
+string test_editSquare_invalidCoord(int board[][9], string coordinates, int row, int col)
+{
+   // coordinates cannot be out of range
+   if (!isCoordValid(row, col))
+   {
+	   string error = "ERROR: Square '" + coordinates + "' is invalid.";
+	   return error;
+   }
+	
+	// check if square is filled
+	if (isCoordFilled(board, row, col))
+	{
+		string error = "ERROR: Square '" + coordinates + "' is filled.";
+		return error;
+    }
+
+	string pass = "The square at '" + coordinates + "' can be edited.";
 	return pass;
 }
  
@@ -605,34 +735,6 @@ bool test_interact_inputE(int board[][9], char input, string coordinates,
 		cout << "ERROR: invalid value\n";
 		return true;
   }
-}
-
-/***********************************************************************
- * WRITE BOARD
- * Write the sudoku board to its destination file.
- ***********************************************************************/
-bool writeFile(int board[][9], string newFile)
-{
-   // open file
-   ofstream fout(newFile);
-   if (fout.fail())
-   {
-	  fout.close();
-	  return false;
-   }
-   
-   // write to file
-   for (int row = 0; row < 9; row++)
-   {
-	  for (int col = 0; col < 9; col++)
-	  {
-		 
-		 fout << board[row][col] << " ";
-	  }
-   }
-   // close file
-   fout.close();
-   return true;
 }
 
 /***********************************************************************
@@ -773,10 +875,15 @@ void test_filledCoordinate(int board[][9])
 
 /***********************************************************************
  *  TEST CASE 7 - TWO NUMBER INPUT
- *  Exercises the computeValues function.
+ *  Exercises the displayPossibleValues function.
  ***********************************************************************/
 void test_possValues_twoNumInput(int board[][9])
 {
+	string coordinates = "DD";
+ 
+	int row;
+	int col;
+	setRowCol(coordinates, row, col);
 	
 }
 
