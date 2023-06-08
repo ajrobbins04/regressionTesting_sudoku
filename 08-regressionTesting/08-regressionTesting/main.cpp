@@ -33,11 +33,12 @@ void editSquare(int board[][9]);
 bool interact(int board[][9]);
 bool writeFile(int board[][9], string newFile);
 
+string test_displayBoard(int board[][9]);
 string test_displayPossibleValues(int board[][9], string coordinates, int row, int col);
-
 string test_editSquare(int board[][9], string coordinates, int row, int col, int value); // For testing w/valid coord input
 string test_editSquare_invalidCoord(int board[][9], string coordinates, int row, int col); // For testing invalid coordinates
 
+bool test_writeFile(int board[][9], string newFile);
 bool test_interact(int board[][9], char input);           // for testing when input != 'E'
 bool test_interact_inputE(int board[][9], char input,     // for testing when input  = 'E'
 						  string coordinates, int row,
@@ -52,6 +53,7 @@ void test_possValues_twoNumInput(int board[][9]);         // test case 7
 void test_possValues_twoLetterInput(int board[][9]);      // test case 8
 void test_possValues_coordinateFilled(int board[][9]);    // test case 9
 void test_possValues_incorrectOrder(int board[][9]);      // test case 10
+void test_saveSudokuBoard(int board[][9]);                // test case 11
 
 
 /**********************************************************************
@@ -82,7 +84,7 @@ int main()
     displayBoard(board);
     cout << endl;
 	
-	// run test cases 2 - 9
+	// run test cases 2 - 11
 	test_updateBoard(board);
 	test_doubleNumInput(board);
 	test_doubleLetterInput(board);
@@ -92,6 +94,8 @@ int main()
 	test_possValues_twoLetterInput(board);
 	test_possValues_coordinateFilled(board);
 	test_possValues_incorrectOrder(board);
+	test_saveSudokuBoard(board);
+	
 	
    // play sudoku until user enters 'Q'
    while (interact(board));
@@ -508,6 +512,16 @@ bool writeFile(int board[][9], string newFile)
 }
 
 /***********************************************************************
+ * TEST DISPLAY BOARD
+ *
+ ***********************************************************************/
+string test_displayBoard(int board[][9])
+{
+	string msg = " ";
+	return msg;
+}
+
+/***********************************************************************
  * TEST DISPLAY POSSIBLE VALUES
  * Runs coordinates through a series of checks before computing possible values.
  ***********************************************************************/
@@ -655,6 +669,36 @@ bool test_interact(int board[][9], char input)
 		cout << "ERROR: invalid value\n";
 		return true;
   }
+}
+
+/***********************************************************************
+* TEST WRITE FILE
+*
+ ************************************************************************/
+bool test_writeFile(int board[][9], string newFile)
+{
+	// open file
+	ofstream fout(newFile);
+	if (fout.fail())
+	{
+	   fout.close();
+	   return false;
+	}
+	
+	// write to file
+	else
+	{
+		for (int row = 0; row < 9; row++)
+		{
+			for (int col = 0; col < 9; col++)
+			{
+				fout << board[row][col] << " ";
+			}
+		}
+		// close file
+		fout.close();
+		return true;
+	}
 }
 
 /***********************************************************************
@@ -888,7 +932,7 @@ void test_possValues_coordinateFilled(int board[][9])
 	int row;
 	int col;
 	setRowCol(coordinates, row, col);
- 
+  
 	string msg = test_editSquare_invalidCoord(board, coordinates, row, col);
 	
 	// check that coordinate is already filled
@@ -929,7 +973,19 @@ void test_possValues_incorrectOrder(int board[][9])
 /***********************************************************************
  *  TEST CASE 11 - SAVE SUDOKU BOARD
  ***********************************************************************/
-
+void test_saveSudokuBoard(int board[][9])
+{
+	string newFileName = "/Users/AmberRobbins/CSE-270_softwareTesting/regressionTesting_sudoku/08-regressionTesting/saveSudoku.txt";
+	
+	test_writeFile(board, newFileName);
+	
+	assert(test_writeFile);
+	
+	if (test_writeFile)
+		cout << "Sudoku successfully save to new file.\n Test Case 11 has Passed.\n\n";
+	else
+		cout << "Test Case 11 has Failed.\n\n";
+}
 /***********************************************************************
  *  TEST CASE 12
  ***********************************************************************/
