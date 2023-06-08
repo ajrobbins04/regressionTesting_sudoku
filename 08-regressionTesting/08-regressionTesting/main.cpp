@@ -83,12 +83,14 @@ int main()
     displayBoard(board);
     cout << endl;
 	
-	// run test cases 2 - 6
+	// run test cases 2 - 8
 	test_updateBoard(board);
 	test_doubleNumInput(board);
 	test_doubleLetterInput(board);
 	test_reverseInputOrder(board);
 	test_filledCoordinate(board);
+	test_possValues_twoNumInput(board);
+	test_possValues_twoLetterInput(board);
    
    // play sudoku until user enters 'Q'
    while (interact(board));
@@ -879,11 +881,21 @@ void test_filledCoordinate(int board[][9])
  ***********************************************************************/
 void test_possValues_twoNumInput(int board[][9])
 {
-	string coordinates = "DD";
+	string coordinates = "22";
  
 	int row;
 	int col;
 	setRowCol(coordinates, row, col);
+	
+	// must check if coord is valid before displaying possible values
+	string msg = test_displayPossibleValues_invalidCoord(board, coordinates, row, col);
+	
+	assert(msg == "ERROR: Square '22' is invalid.");
+	
+	if (msg == "ERROR: Square '22' is invalid.")
+		cout << "Square '22' is invalid.\nTest Case 7 has Passed.\n\n";
+	else
+		cout << "Test Case 7 has Failed.\n\n";
 	
 }
 
@@ -893,7 +905,21 @@ void test_possValues_twoNumInput(int board[][9])
  ***********************************************************************/
 void test_possValues_twoLetterInput(int board[][9])
 {
+	string coordinates = "DD";
+ 
+	int row;
+	int col;
+	setRowCol(coordinates, row, col);
 	
+	// must check if coord is valid before editing it
+	string msg = test_displayPossibleValues_invalidCoord(board, coordinates, row, col);
+	
+	assert(msg == "ERROR: Square 'DD' is invalid.");
+	
+	if (msg == "ERROR: Square 'DD' is invalid.")
+		cout << "Square 'DD' is invalid.\nTest Case 8 has Passed.\n\n";
+	else
+		cout << "Test Case 8 has Failed.\n\n";
 }
 
 /***********************************************************************
