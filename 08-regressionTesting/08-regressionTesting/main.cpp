@@ -91,7 +91,8 @@ int main()
 	test_possValues_twoNumInput(board);
 	test_possValues_twoLetterInput(board);
 	test_possValues_coordinateFilled(board);
-   
+	test_possValues_incorrectOrder(board);
+	
    // play sudoku until user enters 'Q'
    while (interact(board));
  
@@ -881,23 +882,20 @@ void test_possValues_twoLetterInput(int board[][9])
  ***********************************************************************/
 void test_possValues_coordinateFilled(int board[][9])
 {
-	// given in reverse order
-	string coordinates = "4A";
-
+	// not valid b/c B1 is already filled
+	string coordinates = "I9";
+ 
 	int row;
 	int col;
 	setRowCol(coordinates, row, col);
-
-
-	// must check if coord is valid before editing it.
-	// value is included in parameter b/c coord can be edited, so it needs a value.
-	string msg = test_displayPossibleValues(board, coordinates, row, col);
+ 
+	string msg = test_editSquare_invalidCoord(board, coordinates, row, col);
 	
-	// check that coordinate order is fixed.
-	assert(msg == "The possible values at square 'A4' are: 1, 3");
+	// check that coordinate is already filled
+	assert(msg == "ERROR: Square 'I9' is filled.");
 	
-	if (msg == "The possible values at square 'A4' are: 1, 3")
-		cout << msg << "\nTest Case 9 has Passed.\n\n";
+	if (msg == "ERROR: Square 'I9' is filled.")
+		cout << "Square 'I9' is filled.\nTest Case 9 has Passed.\n\n";
 	else
 		cout << "Test Case 9 has Failed.\n\n";
 }
@@ -908,7 +906,24 @@ void test_possValues_coordinateFilled(int board[][9])
  ***********************************************************************/
 void test_possValues_incorrectOrder(int board[][9])
 {
+	// given in reverse order
+	string coordinates = "4A";
+
+	int row;
+	int col;
+	setRowCol(coordinates, row, col);
+
+	// must check if coord is valid before editing it.
+	// value is included in parameter b/c coord can be edited, so it needs a value.
+	string msg = test_displayPossibleValues(board, coordinates, row, col);
 	
+	// check that coordinate order is fixed.
+	assert(msg == "The possible values at square 'A4' are: 1, 3");
+	
+	if (msg == "The possible values at square 'A4' are: 1, 3")
+		cout << msg << ".\nTest Case 10 has Passed.\n\n";
+	else
+		cout << "Test Case 10 has Failed.\n\n";
 }
 
 /***********************************************************************
