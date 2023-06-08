@@ -30,19 +30,27 @@ int getCol(string coordinates);
 void setRowCol(string &coordinates, int &row, int &col);
 int promptValue(string coordinates);
 void editSquare(int board[][9]);
+bool interact(int board[][9]);
+
 string test_editSquare_invalidCoord(int board[][9], string coordinates, int row, int col); // For testing invalid coordinates
 string test_editSquare(int board[][9], string coordinates, int row, int col, int value); // For testing w/valid coord input
-bool interact(int board[][9]);
+
 bool test_interact(int board[][9], char input);           // for testing when input != 'E'
 bool test_interact_inputE(int board[][9], char input,     // for testing when input  = 'E'
 						  string coordinates, int row,
 						  int col, int value);
+
 bool writeFile(int board[][9], string newFile);
 void test_updateBoard(int board[][9]);                    // test case 2
 void test_doubleNumInput(int board[][9]);                 // test case 3
 void test_doubleLetterInput(int board[][9]);              // test case 4
 void test_reverseInputOrder(int board[][9]);              // test case 5
 void test_filledCoordinate(int board[][9]);               // test case 6
+void test_possValues_twoNumInput(int board[][9]);         // test case 7
+void test_possValues_twoLetterInput(int board[][9]);      // test case 8
+void test_possValues_coordinateFilled(int board[][9]);    // test case 9
+void test_possValues_incorrectOrder(int board[][9]);      // test case 10
+
 
 /**********************************************************************
  * MAIN
@@ -418,6 +426,44 @@ void editSquare(int board[][9])
 }
 
 /***********************************************************************
+ * INTERACT
+ * User chooses their input from a series of options
+ ***********************************************************************/
+bool interact(int board[][9])
+{
+   char input;
+   cout << "> ";
+   cin >> input;
+	  
+   input = toupper(input);
+
+   switch (input)
+   {
+	  case '?':
+		 displayOptions(); // show list of options
+		 cout << endl << endl;
+		 return true;
+	  case 'D':
+		 displayBoard(board); // show sudoku board
+		 cout << endl;
+		 return true;
+	  case 'E':
+		 editSquare(board); // add new value onto board
+		 cout << endl;
+		 return true;
+	  case 'S':
+		 displayPossibleValues(board); // show possible values
+		 cout << endl;
+		 return true;
+	  case 'Q': // Quit program
+		 return false;
+	  default:
+		 cout << "ERROR: invalid value\n";
+		 return true;
+   }
+}
+
+/***********************************************************************
  * TEST EDIT SQUARE
  * Runs coordinates through a series of checks. This version of
  * editSquare is used only when the provided coordinates are expected
@@ -490,46 +536,6 @@ string test_editSquare(int board[][9], string coordinates, int row, int col, int
 	return pass;
 }
  
- 
-/***********************************************************************
- * INTERACT
- * User chooses their input from a series of options
- ***********************************************************************/
-bool interact(int board[][9])
-{
-   char input;
-   cout << "> ";
-   cin >> input;
-	  
-   input = toupper(input);
-
-   switch (input)
-   {
-	  case '?':
-		 displayOptions(); // show list of options
-		 cout << endl << endl;
-		 return true;
-	  case 'D':
-		 displayBoard(board); // show sudoku board
-		 cout << endl;
-		 return true;
-	  case 'E':
-		 editSquare(board); // add new value onto board
-		 cout << endl;
-		 return true;
-	  case 'S':
-		 displayPossibleValues(board); // show possible values
-		 cout << endl;
-		 return true;
-	  case 'Q': // Quit program
-		 return false;
-	  default:
-		 cout << "ERROR: invalid value\n";
-		 return true;
-   }
-}
-
-
 /***********************************************************************
 * TEST INTERACT
 * User chooses their input from a series of options. This version of interact is
@@ -636,8 +642,10 @@ void test_displayBoard()
 {
 	
 }
+
 /***********************************************************************
- *  TEST CASE 2: UPDATE BOARD
+ *  TEST CASE 2
+ *  UPDATE BOARD
  ***********************************************************************/
 void test_updateBoard(int board[][9])
 {
@@ -662,13 +670,11 @@ void test_updateBoard(int board[][9])
 	}
 	else
 		cout << "Test Case 2 has Failed.\n\n";
-	
-	
- 
-	
 }
+
 /***********************************************************************
- *  TEST CASE 3: DOUBLE NUMBER INPUT
+ *  TEST CASE 3 - DOUBLE NUMBER INPUT
+ *  Exercises the editSquare function.
  ***********************************************************************/
 void test_doubleNumInput(int board[][9])
 {
@@ -688,10 +694,11 @@ void test_doubleNumInput(int board[][9])
 		cout << "Square '11' is invalid.\nTest Case 3 has Passed.\n\n";
 	else
 		cout << "Test Case 3 has Failed.\n\n";
-  
 }
+
 /***********************************************************************
- *  TEST CASE 4: DOUBLE LETTER INPUT
+ *  TEST CASE 4 - DOUBLE LETTER INPUT
+ *  Exercises the editSquare function.
  ***********************************************************************/
 void test_doubleLetterInput(int board[][9])
 {
@@ -711,8 +718,10 @@ void test_doubleLetterInput(int board[][9])
 	else
 		cout << "Test Case 4 has Failed.\n\n";
 }
+
 /***********************************************************************
- *  TEST CASE 5: REVERSE INPUT ORDER
+ *  TEST CASE 5 - REVERSE INPUT ORDER
+ *  Exercises the editSquare function.
  ***********************************************************************/
 void test_reverseInputOrder(int board[][9])
 {
@@ -739,7 +748,8 @@ void test_reverseInputOrder(int board[][9])
 }
 
 /***********************************************************************
- *  TEST CASE 6: FILLED COORDINATE
+ *  TEST CASE 6 - FILLED COORDINATE
+ *  Exercises the editSquare function.
  ***********************************************************************/
 void test_filledCoordinate(int board[][9])
 {
@@ -762,23 +772,43 @@ void test_filledCoordinate(int board[][9])
 }
 
 /***********************************************************************
- *  TEST CASE 7
+ *  TEST CASE 7 - TWO NUMBER INPUT
+ *  Exercises the computeValues function.
  ***********************************************************************/
+void test_possValues_twoNumInput(int board[][9])
+{
+	
+}
 
 /***********************************************************************
- *  TEST CASE 8
+ *  TEST CASE 8 - TWO LETTER INPUT
+ *  Exercises the computeValues function.
  ***********************************************************************/
+void test_possValues_twoLetterInput(int board[][9])
+{
+	
+}
 
 /***********************************************************************
- *  TEST CASE 9
+ *  TEST CASE 9 - COORDINATE FILLED
+ *  Exercises the computeValues function.
  ***********************************************************************/
+void test_possValues_coordinateFilled(int board[][9])
+{
+	
+}
 
 /***********************************************************************
- *  TEST CASE 10
+ *  TEST CASE 10 - INCORRECT ORDER
+ *  Exercises the computeValues function.
  ***********************************************************************/
+void test_possValues_incorrectOrder(int board[][9])
+{
+	
+}
 
 /***********************************************************************
- *  TEST CASE 11
+ *  TEST CASE 11 - SAVE SUDOKU BOARD
  ***********************************************************************/
 
 /***********************************************************************
