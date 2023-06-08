@@ -44,7 +44,8 @@ bool test_interact_inputE(int board[][9], char input,     // for testing when in
 						  string coordinates, int row,
 						  int col, int value);
 
-void test_updateBoard(int board[][9]);                    // test case 2
+void test_updateBoard(int board[][9]);                    // test case 1
+void test_updatePossValues_noneLeft(int board[][9]);      // test case 2
 void test_doubleNumInput(int board[][9]);                 // test case 3
 void test_doubleLetterInput(int board[][9]);              // test case 4
 void test_reverseInputOrder(int board[][9]);              // test case 5
@@ -86,6 +87,7 @@ int main()
 	
 	// run test cases 2 - 11
 	test_updateBoard(board);
+	test_updatePossValues_noneLeft(board);
 	test_doubleNumInput(board);
 	test_doubleLetterInput(board);
 	test_reverseInputOrder(board);
@@ -328,7 +330,8 @@ void displayPossibleValues(int board[][9])
     values.pop_back(); //removes ", " after last value
     values.pop_back();
 
-    cout << values << endl;
+	cout << values << endl;
+
 }
 
 /***********************************************************************
@@ -558,8 +561,10 @@ string test_displayPossibleValues(int board[][9], string coordinates, int row, i
 	}
 	values.pop_back(); //removes ", " after last value
 	values.pop_back();
-		
+
 	string msg = "The possible values at square '" + coordinates + "' are: " + values;
+
+	
 	return msg;
 }
 
@@ -726,7 +731,7 @@ bool test_interact_inputE(int board[][9], char input, string coordinates,
 		cout << endl;
 		return true;
 	 case 'S':
-		displayPossibleValues(board); // show possible values
+		test_displayPossibleValues(board, coordinates, row, col); // show possible values
 		cout << endl;
 		return true;
 	 case 'Q': // Quit program
@@ -738,16 +743,7 @@ bool test_interact_inputE(int board[][9], char input, string coordinates,
 }
 
 /***********************************************************************
- *  TEST CASE 1: DISPLAY BOARD
- ***********************************************************************/
-void test_displayBoard()
-{
-	
-}
-
-/***********************************************************************
- *  TEST CASE 2
- *  UPDATE BOARD
+ *  TEST CASE 1 - UPDATE BOARD
  ***********************************************************************/
 void test_updateBoard(int board[][9])
 {
@@ -768,10 +764,45 @@ void test_updateBoard(int board[][9])
 	
 	if (board[row][col] == 4)
 	{
-		cout << "4 was added to square 'E1'.\nTest Case 2 has passed.\n\n";
+		cout << "4 was added to square 'E1'.\nTest Case 1 has passed.\n\n";
 	}
 	else
-		cout << "Test Case 2 has Failed.\n\n";
+		cout << "Test Case 1 has Failed.\n\n";
+}
+
+/***********************************************************************
+ *  TEST CASE 2 - UPDATE POSSIBLE VALUES - NONE LEFT
+ ***********************************************************************/
+void test_updatePossValues_noneLeft(int board[][9])
+{
+	// valid coordinates
+	string coordinates = "E5";
+	
+	int row;
+	int col;
+	setRowCol(coordinates, row, col);
+
+	// only possible value should be 8
+	string msg = test_displayPossibleValues(board, coordinates, row, col);
+	
+	assert(msg == "The possible values at square 'E5' are: 8");
+	
+	if (msg == "The possible values at square 'E5' are: 8")
+	{
+		// edit the board at "E5" using 8
+		char input = 'E';
+		int value = 8;
+		test_interact_inputE(board, input, coordinates, row, col, value);
+
+		// check the possible values at "E5" again
+		string msg = test_displayPossibleValues(board, coordinates, row, col);
+		
+		// there shouldn't be any possible values left
+		assert(msg == "ERROR: Square 'E5' is filled.");
+		
+		if (msg == "ERROR: Square 'E5' is filled.")
+			cout << "Square 'E5' is now filled.\nTest Case 2 has Passed.\n\n";
+	}
 }
 
 /***********************************************************************
@@ -972,6 +1003,7 @@ void test_possValues_incorrectOrder(int board[][9])
 
 /***********************************************************************
  *  TEST CASE 11 - SAVE SUDOKU BOARD
+ *  Exercises the writeFile function.
  ***********************************************************************/
 void test_saveSudokuBoard(int board[][9])
 {
@@ -981,11 +1013,12 @@ void test_saveSudokuBoard(int board[][9])
 	
 	assert(test_writeFile);
 	
-	if (test_writeFile)
+	if (test_writeFile(board, newFileName) == true)
 		cout << "Sudoku successfully save to new file.\n Test Case 11 has Passed.\n\n";
 	else
 		cout << "Test Case 11 has Failed.\n\n";
 }
+
 /***********************************************************************
  *  TEST CASE 12
  ***********************************************************************/
