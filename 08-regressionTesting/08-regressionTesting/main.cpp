@@ -1026,7 +1026,8 @@ void test_saveSudokuBoard()
 
 /***********************************************************************
  *  TEST CASE 13 - READ FILE
- *  Verifies that the sudoku board file can be successfully read into the program.
+ *  Verifies that the sudoku board file containing 9 rows and 9 columns of numbers
+ *  can be successfully read into the program and build as a sudoku game.
  ***********************************************************************/
 void test_readFile(int board[][9])
 {
@@ -1044,7 +1045,7 @@ void test_readFile(int board[][9])
 	cout << "Test Case 13 Board: \n\n";
 	displayBoard(altBoard);
 	cout << endl;
-	
+
 	assert(readFile);
 	
 	if (readFile(altBoard, fileName) == true)
