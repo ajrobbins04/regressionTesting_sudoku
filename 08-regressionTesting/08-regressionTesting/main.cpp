@@ -780,32 +780,35 @@ void test_updatePossValues(int board[][9])
 	// valid coordinates
 	string coord_E9 = "E9";
 	
-	int row;
-	int col;
-	setRowCol(coord_E9, row, col);
+	int row_E9;
+	int col_E9;
+	setRowCol(coord_E9, row_E9, col_E9);
 
 	// 'E9' possible values should be: 6, 8
-	string msg1 = test_displayPossibleValues(board, coord_E9, row, col);
+	string msg1 = test_displayPossibleValues(board, coord_E9, row_E9, col_E9);
 	assert(msg1 == "The possible values at square 'E9' are: 6, 8");
 	
 	string coord_E8 = "E8";
+	int row_E8;
+	int col_E8;
+	setRowCol(coord_E8, row_E8, col_E8);
 	
 	// 'E8' should have same possible values as 'E9'
-	string msg2 = test_displayPossibleValues(board, coord_E8, row, col);
-	assert(msg2 == "The possible values at square 'E8' are: 6, 8");
+	string msg2 = test_displayPossibleValues(board, coord_E8, row_E8, col_E8);
+	assert(msg2 == "The possible values at square 'E8' are: 2, 8, 9");
 	
 	if (msg1 == "The possible values at square 'E9' are: 6, 8"
-		&& msg2 == "The possible values at square 'E8' are: 6, 8")
+		&& msg2 == "The possible values at square 'E8' are: 2, 8, 9")
 	{
 		// edit the board at 'E9' using 6
 		char input = 'E';
 		int value = 6;
 		
-		test_interact_inputE(board, input, coord_E9, row, col, value);
+		test_interact_inputE(board, input, coord_E9, row_E9, col_E9, value);
 
 		// check the possible values at 'E8' again
 		// can't check 'E9' b/c it is now filled
-		string msg3 = test_displayPossibleValues(board, coord_E8, row, col);
+		string msg3 = test_displayPossibleValues(board, coord_E8, row_E8, col_E8);
 		
 		// only possible value should be 6 at 'E8'.
 		assert(msg3 == "The possible values at square 'E8' are: 8");
