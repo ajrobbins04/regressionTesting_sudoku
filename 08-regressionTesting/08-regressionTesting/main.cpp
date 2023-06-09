@@ -45,7 +45,7 @@ bool test_interact_inputE(int board[][9], char input,     // for testing when in
 						  int col, int value);
 
 void test_updateBoard(int board[][9]);                    // test case 1
-void test_correctLowercaseCoord(int board[][9]);          // test case 2
+void test_correctLowercaseInput(int board[][9]);          // test case 2
 void test_updatePossValues(int board[][9]);               // test case 3
 void test_doubleNumInput(int board[][9]);                 // test case 3
 void test_doubleLetterInput(int board[][9]);              // test case 4
@@ -88,7 +88,7 @@ int main()
 	
 	// run test cases 1 - 12
 	test_updateBoard(board);
-	test_correctLowercaseCoord(board);
+	test_correctLowercaseInput(board);
 	test_updatePossValues(board);
 	test_doubleNumInput(board);
 	test_doubleLetterInput(board);
@@ -99,17 +99,7 @@ int main()
 	test_possValues_coordinateFilled(board);
 	test_possValues_incorrectOrder(board);
 	test_saveSudokuBoard(board);
-	
-	cout << "Select 'D' to continue playing past test cases,\nor 'Q' to quit program.\n";
-	
-   // play sudoku until user enters 'Q'
-   while (interact(board));
  
-   // program closes after file is successfully written
-   if (!writeFile(board, fileName))
-	  cout << "ERROR: unable to open " << fileName << endl;
-   else
-	  cout << "Board written successfully\n";
 
    return 0;
    
@@ -748,6 +738,8 @@ bool test_interact_inputE(int board[][9], char input, string coordinates,
 
 /***********************************************************************
  *  TEST CASE 1 - UPDATE BOARD
+ *  Verify that the board registers and displays updated squares
+ *  that have been filled in.
  ***********************************************************************/
 void test_updateBoard(int board[][9])
 {
@@ -775,12 +767,11 @@ void test_updateBoard(int board[][9])
 }
 
 /***********************************************************************
- *  TEST CASE 2 - CORRECT LOWERCASE COORDINATE
- *  Autocorrect a lowercase coordinate so it can still be used
- *  to compute possible values.
+ *  TEST CASE 2 - CORRECT LOWERCASE INPUT
+ *  Ensure that lowercase coordinates are autocorrected and used successfully.
  ***********************************************************************/
-void test_correctLowercaseCoord(int board[][9])
-{;
+void test_correctLowercaseInput(int board[][9])
+{
 	string coordinates = "i5";
 	
 	int row;
@@ -790,6 +781,7 @@ void test_correctLowercaseCoord(int board[][9])
 	// must check if coord is valid before displaying possible values
 	string msg = test_displayPossibleValues(board, coordinates, row, col);
 	
+	assert(coordinates == "I5");
 	assert(msg == "The possible values at square 'I5' are: 1, 5");
 
 	
