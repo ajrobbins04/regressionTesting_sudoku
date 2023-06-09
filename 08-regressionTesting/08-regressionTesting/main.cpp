@@ -100,6 +100,7 @@ int main()
 	test_possValues_incorrectOrder(board);
 	test_saveSudokuBoard(board);
 	
+	cout << "Select 'D' to continue playing past test cases,\nor 'Q' to quit program.\n";
 	
    // play sudoku until user enters 'Q'
    while (interact(board));
