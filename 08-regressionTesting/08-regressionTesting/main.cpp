@@ -33,12 +33,10 @@ void editSquare(int board[][9]);
 bool interact(int board[][9]);
 bool writeFile(int board[][9], string newFile);
 
-string test_displayBoard(int board[][9]);
 string test_displayPossibleValues(int board[][9], string coordinates, int row, int col);
 string test_editSquare(int board[][9], string coordinates, int row, int col, int value); // For testing w/valid coord input
 string test_editSquare_invalidCoord(int board[][9], string coordinates, int row, int col); // For testing invalid coordinates
 
-bool test_writeFile(int board[][9], string newFile);
 bool test_interact(int board[][9], char input);           // for testing when input != 'E'
 bool test_interact_inputE(int board[][9], char input,     // for testing when input  = 'E'
 						  string coordinates, int row,
@@ -47,15 +45,16 @@ bool test_interact_inputE(int board[][9], char input,     // for testing when in
 void test_updateBoard(int board[][9]);                    // test case 1
 void test_correctLowercaseInput(int board[][9]);          // test case 2
 void test_updatePossValues(int board[][9]);               // test case 3
-void test_doubleNumInput(int board[][9]);                 // test case 3
-void test_doubleLetterInput(int board[][9]);              // test case 4
-void test_reverseInputOrder(int board[][9]);              // test case 5
-void test_filledCoordinate(int board[][9]);               // test case 6
-void test_possValues_twoNumInput(int board[][9]);         // test case 7
-void test_possValues_twoLetterInput(int board[][9]);      // test case 8
-void test_possValues_coordinateFilled(int board[][9]);    // test case 9
-void test_possValues_incorrectOrder(int board[][9]);      // test case 10
-void test_saveSudokuBoard(int board[][9]);                // test case 11
+void test_doubleNumInput(int board[][9]);                 // test case 4
+void test_doubleLetterInput(int board[][9]);              // test case 5
+void test_reverseInputOrder(int board[][9]);              // test case 6
+void test_filledCoordinate(int board[][9]);               // test case 7
+void test_possValues_twoNumInput(int board[][9]);         // test case 8
+void test_possValues_twoLetterInput(int board[][9]);      // test case 9
+void test_possValues_coordinateFilled(int board[][9]);    // test case 10
+void test_possValues_incorrectOrder(int board[][9]);      // test case 11
+void test_saveSudokuBoard();                              // test case 12
+void test_readFile(int board[][9]);                       // test case 13
 
 
 /**********************************************************************
@@ -86,7 +85,7 @@ int main()
     displayBoard(board);
     cout << endl;
 	
-	// run test cases 1 - 12
+	// run test cases 1 - 13
 	test_updateBoard(board);
 	test_correctLowercaseInput(board);
 	test_updatePossValues(board);
@@ -98,7 +97,8 @@ int main()
 	test_possValues_twoLetterInput(board);
 	test_possValues_coordinateFilled(board);
 	test_possValues_incorrectOrder(board);
-	test_saveSudokuBoard(board);
+	test_saveSudokuBoard();
+	test_readFile(board);
  
 
    return 0;
@@ -509,16 +509,6 @@ bool writeFile(int board[][9], string newFile)
 }
 
 /***********************************************************************
- * TEST DISPLAY BOARD
- *
- ***********************************************************************/
-string test_displayBoard(int board[][9])
-{
-	string msg = " ";
-	return msg;
-}
-
-/***********************************************************************
  * TEST DISPLAY POSSIBLE VALUES
  * Runs coordinates through a series of checks before computing possible values.
  ***********************************************************************/
@@ -670,35 +660,6 @@ bool test_interact(int board[][9], char input)
   }
 }
 
-/***********************************************************************
-* TEST WRITE FILE
-*
- ************************************************************************/
-bool test_writeFile(int board[][9], string newFile)
-{
-	// open file
-	ofstream fout(newFile);
-	if (fout.fail())
-	{
-	   fout.close();
-	   return false;
-	}
-	
-	// write to file
-	else
-	{
-		for (int row = 0; row < 9; row++)
-		{
-			for (int col = 0; col < 9; col++)
-			{
-				fout << board[row][col] << " ";
-			}
-		}
-		// close file
-		fout.close();
-		return true;
-	}
-}
 
 /***********************************************************************
 * TEST INTERACT - INPUT 'E'
@@ -795,6 +756,8 @@ void test_correctLowercaseInput(int board[][9])
 
  /***********************************************************************
  *  TEST CASE 3 - UPDATE POSSIBLE VALUES
+ *  Check that the displayPossibleValues function doesn't compute values
+ *  for  a square after it has been updated with a valid value.
  ***********************************************************************/
 void test_updatePossValues(int board[][9])
 {
@@ -824,7 +787,7 @@ void test_updatePossValues(int board[][9])
 		assert(msg == "ERROR: Square 'E5' is filled.");
 		
 		if (msg == "ERROR: Square 'E5' is filled.")
-			cout << "Square 'E5' is now filled.\nTest Case 3 has Passed.\n\n";
+			cout << "Square 'E5' is now filled, so possible values aren't computed.\nTest Case 3 has Passed.\n\n";
 		else
 			cout << "Test Case 3 has Failed.\n\n";
 	}
@@ -832,11 +795,11 @@ void test_updatePossValues(int board[][9])
 
 /***********************************************************************
  *  TEST CASE 4 - DOUBLE NUMBER INPUT
- *  Exercises the editSquare function.
+ *  Checks if the editSquare function handles invalid input where two numbers
+ *  are added instead of valid coordinates.
  ***********************************************************************/
 void test_doubleNumInput(int board[][9])
 {
-	
 	string coordinates = "11";
  
 	int row;
@@ -856,7 +819,8 @@ void test_doubleNumInput(int board[][9])
 
 /***********************************************************************
  *  TEST CASE 5 - DOUBLE LETTER INPUT
- *  Exercises the editSquare function.
+ *  Checks if the editSquare function handles invalid input
+ *  where two letters are added.
  ***********************************************************************/
 void test_doubleLetterInput(int board[][9])
 {
@@ -879,7 +843,8 @@ void test_doubleLetterInput(int board[][9])
 
 /***********************************************************************
  *  TEST CASE 6 - REVERSE INPUT ORDER
- *  Exercises the editSquare function.
+ *  Checks if the editSquare function can correct and use
+ *  coordinates written in reverse (number first, letter last).
  ***********************************************************************/
 void test_reverseInputOrder(int board[][9])
 {
@@ -907,7 +872,8 @@ void test_reverseInputOrder(int board[][9])
 
 /***********************************************************************
  *  TEST CASE 7 - FILLED COORDINATE
- *  Exercises the editSquare function.
+ *  Checks if the coordinate is already occupied from within
+ *  the editSquare function.
  ***********************************************************************/
 void test_filledCoordinate(int board[][9])
 {
@@ -931,7 +897,8 @@ void test_filledCoordinate(int board[][9])
 
 /***********************************************************************
  *  TEST CASE 8 - TWO NUMBER INPUT
- *  Exercises the displayPossibleValues function.
+ *  Checks if the displayPossibleValues function handles invalid
+ *  input where two numbers are used.
  ***********************************************************************/
 void test_possValues_twoNumInput(int board[][9])
 {
@@ -955,7 +922,8 @@ void test_possValues_twoNumInput(int board[][9])
 
 /***********************************************************************
  *  TEST CASE 9 - TWO LETTER INPUT
- *  Exercises the computeValues function.
+ *  Checks if the displayPossibleValues function handles invalid
+ *  input where two letters are used.
  ***********************************************************************/
 void test_possValues_twoLetterInput(int board[][9])
 {
@@ -978,7 +946,8 @@ void test_possValues_twoLetterInput(int board[][9])
 
 /***********************************************************************
  *  TEST CASE 10 - COORDINATE FILLED
- *  Exercises the computeValues function.
+ *  Checks if the coordinate is already occupied from within
+ *  the displayPossibleValues function.
  ***********************************************************************/
 void test_possValues_coordinateFilled(int board[][9])
 {
@@ -989,7 +958,7 @@ void test_possValues_coordinateFilled(int board[][9])
 	int col;
 	setRowCol(coordinates, row, col);
   
-	string msg = test_editSquare_invalidCoord(board, coordinates, row, col);
+	string msg = test_displayPossibleValues(board, coordinates, row, col);
 	
 	// check that coordinate is already filled
 	assert(msg == "ERROR: Square 'I9' is filled.");
@@ -1002,7 +971,8 @@ void test_possValues_coordinateFilled(int board[][9])
 
 /***********************************************************************
  *  TEST CASE 11 - INCORRECT ORDER
- *  Exercises the computeValues function.
+ *  Checks if the displayPossibleValues function can correct and use
+ *  coordinates written in reverse (number first, letter last).
  ***********************************************************************/
 void test_possValues_incorrectOrder(int board[][9])
 {
@@ -1028,22 +998,58 @@ void test_possValues_incorrectOrder(int board[][9])
 
 /***********************************************************************
  *  TEST CASE 12 - SAVE SUDOKU BOARD
- *  Exercises the writeFile function.
+ *  Validates whether the writeFile function is able to successfully
+ *  save the sudoku program.
  ***********************************************************************/
-void test_saveSudokuBoard(int board[][9])
+void test_saveSudokuBoard()
 {
+	int originalBoard[9][9];
+	string fileName = "/Users/AmberRobbins/CSE-270_softwareTesting/regressionTesting_sudoku/08-regressionTesting/sudoku.txt";
+	
+	// read original file's contents into an alternate board
+	readFile(originalBoard, fileName);
+	
+	int newBoard[9][9];
 	string newFileName = "/Users/AmberRobbins/CSE-270_softwareTesting/regressionTesting_sudoku/08-regressionTesting/saveSudoku.txt";
 	
-	test_writeFile(board, newFileName);
+	writeFile(newBoard, newFileName);
 	
-	assert(test_writeFile);
+	assert(writeFile);
+	assert(originalBoard[0][4] != newBoard[0][4]);
 	
-	if (test_writeFile(board, newFileName) == true)
-		cout << "Sudoku successfully save to new file.\n Test Case 12 has Passed.\n\n";
+	if (writeFile(newBoard, newFileName) == true
+		&& originalBoard[0][4] != newBoard[0][4])
+		cout << "Sudoku successfully saved with changes to a new file.\nTest Case 12 has Passed.\n\n";
 	else
 		cout << "Test Case 12 has Failed.\n\n";
 }
 
 /***********************************************************************
- *  TEST CASE 12
+ *  TEST CASE 13 - READ FILE
+ *  Verifies that the sudoku board file can be successfully read into the program.
  ***********************************************************************/
+void test_readFile(int board[][9])
+{
+	int altBoard[9][9];
+	
+	string fileName = "/Users/AmberRobbins/CSE-270_softwareTesting/regressionTesting_sudoku/08-regressionTesting/altSudoku.txt";
+	
+	// read this file's contents into an alternate board
+	readFile(altBoard, fileName);
+	
+	cout << "Original Board: \n\n";
+	displayBoard(board);
+	cout << endl;
+	
+	cout << "Test Case 13 Board: \n\n";
+	displayBoard(altBoard);
+	cout << endl;
+	
+	assert(readFile);
+	
+	if (readFile(altBoard, fileName) == true)
+		cout << "File contents successfully read into the program.\nTest Case 13 has Passed.\n\n";
+	else
+		cout << "Test Case 13 has Failed.\n\n";
+
+}
