@@ -45,7 +45,8 @@ bool test_interact_inputE(int board[][9], char input,     // for testing when in
 						  int col, int value);
 
 void test_updateBoard(int board[][9]);                    // test case 1
-void test_updatePossValues_noneLeft(int board[][9]);      // test case 2
+void test_updatePossValues(int board[][9]);               // test case 2
+void test_updatePossValues_noneLeft(int board[][9]);      // test case 3
 void test_doubleNumInput(int board[][9]);                 // test case 3
 void test_doubleLetterInput(int board[][9]);              // test case 4
 void test_reverseInputOrder(int board[][9]);              // test case 5
@@ -85,8 +86,9 @@ int main()
     displayBoard(board);
     cout << endl;
 	
-	// run test cases 2 - 11
+	// run test cases 1 - 12
 	test_updateBoard(board);
+	test_updatePossValues(board);
 	test_updatePossValues_noneLeft(board);
 	test_doubleNumInput(board);
 	test_doubleLetterInput(board);
@@ -771,11 +773,55 @@ void test_updateBoard(int board[][9])
 }
 
 /***********************************************************************
- *  TEST CASE 2 - UPDATE POSSIBLE VALUES - NONE LEFT
+ *  TEST CASE 2 - UPDATE POSSIBLE VALUES
+ ***********************************************************************/
+void test_updatePossValues(int board[][9])
+{
+	// valid coordinates
+	string coord_E9 = "E9";
+	
+	int row;
+	int col;
+	setRowCol(coord_E9, row, col);
+
+	// 'E9' possible values should be: 6, 8
+	string msg1 = test_displayPossibleValues(board, coord_E9, row, col);
+	assert(msg1 == "The possible values at square 'E9' are: 6, 8");
+	
+	string coord_E8 = "E8";
+	
+	// 'E8' should have same possible values as 'E9'
+	string msg2 = test_displayPossibleValues(board, coord_E8, row, col);
+	assert(msg2 == "The possible values at square 'E8' are: 6, 8");
+	
+	if (msg1 == "The possible values at square 'E9' are: 6, 8"
+		&& msg2 == "The possible values at square 'E8' are: 6, 8")
+	{
+		// edit the board at 'E9' using 6
+		char input = 'E';
+		int value = 6;
+		
+		test_interact_inputE(board, input, coord_E9, row, col, value);
+
+		// check the possible values at 'E8' again
+		// can't check 'E9' b/c it is now filled
+		string msg3 = test_displayPossibleValues(board, coord_E8, row, col);
+		
+		// only possible value should be 6 at 'E8'.
+		assert(msg3 == "The possible values at square 'E8' are: 8");
+		
+		if (msg3 == "The possible values at square 'E8' are: 8")
+			cout << "Square 'E8' has one possible value left.\nTest Case 2 has Passed.\n\n";
+		else
+			cout << "Test Case 2 has Failed.\n\n";
+	}
+}
+/***********************************************************************
+ *  TEST CASE 3 - UPDATE POSSIBLE VALUES - NONE LEFT
  ***********************************************************************/
 void test_updatePossValues_noneLeft(int board[][9])
 {
-	// valid coordinates
+	// valid coordinate w/one possible value left
 	string coordinates = "E5";
 	
 	int row;
@@ -801,12 +847,14 @@ void test_updatePossValues_noneLeft(int board[][9])
 		assert(msg == "ERROR: Square 'E5' is filled.");
 		
 		if (msg == "ERROR: Square 'E5' is filled.")
-			cout << "Square 'E5' is now filled.\nTest Case 2 has Passed.\n\n";
+			cout << "Square 'E5' is now filled.\nTest Case 3 has Passed.\n\n";
+		else
+			cout << "Test Case 3 has Failed.\n\n";
 	}
 }
 
 /***********************************************************************
- *  TEST CASE 3 - DOUBLE NUMBER INPUT
+ *  TEST CASE 4 - DOUBLE NUMBER INPUT
  *  Exercises the editSquare function.
  ***********************************************************************/
 void test_doubleNumInput(int board[][9])
@@ -824,13 +872,13 @@ void test_doubleNumInput(int board[][9])
 	assert(msg == "ERROR: Square '11' is invalid.");
 	
 	if (msg == "ERROR: Square '11' is invalid.")
-		cout << "Square '11' is invalid.\nTest Case 3 has Passed.\n\n";
+		cout << "Square '11' is invalid.\nTest Case 4 has Passed.\n\n";
 	else
-		cout << "Test Case 3 has Failed.\n\n";
+		cout << "Test Case 4 has Failed.\n\n";
 }
 
 /***********************************************************************
- *  TEST CASE 4 - DOUBLE LETTER INPUT
+ *  TEST CASE 5 - DOUBLE LETTER INPUT
  *  Exercises the editSquare function.
  ***********************************************************************/
 void test_doubleLetterInput(int board[][9])
@@ -847,13 +895,13 @@ void test_doubleLetterInput(int board[][9])
 	assert(msg == "ERROR: Square 'BB' is invalid.");
 	
 	if (msg == "ERROR: Square 'BB' is invalid.")
-		cout << "Square 'BB' is invalid.\nTest Case 4 has Passed.\n\n";
+		cout << "Square 'BB' is invalid.\nTest Case 5 has Passed.\n\n";
 	else
-		cout << "Test Case 4 has Failed.\n\n";
+		cout << "Test Case 5 has Failed.\n\n";
 }
 
 /***********************************************************************
- *  TEST CASE 5 - REVERSE INPUT ORDER
+ *  TEST CASE 6 - REVERSE INPUT ORDER
  *  Exercises the editSquare function.
  ***********************************************************************/
 void test_reverseInputOrder(int board[][9])
@@ -875,13 +923,13 @@ void test_reverseInputOrder(int board[][9])
 	assert(msg == "The square at 'B2' was edited.");
 	
 	if (msg == "The square at 'B2' was edited.")
-		cout << msg << "\nTest Case 5 has Passed.\n\n";
+		cout << msg << "\nTest Case 6 has Passed.\n\n";
 	else
-		cout << "Test Case 5 has Failed.\n\n";
+		cout << "Test Case 6 has Failed.\n\n";
 }
 
 /***********************************************************************
- *  TEST CASE 6 - FILLED COORDINATE
+ *  TEST CASE 7 - FILLED COORDINATE
  *  Exercises the editSquare function.
  ***********************************************************************/
 void test_filledCoordinate(int board[][9])
@@ -899,13 +947,13 @@ void test_filledCoordinate(int board[][9])
 	assert(msg == "ERROR: Square 'B1' is filled.");
 	
 	if (msg == "ERROR: Square 'B1' is filled.")
-		cout << "Square 'B1' is filled.\nTest Case 6 has Passed.\n\n";
+		cout << "Square 'B1' is filled.\nTest Case 7 has Passed.\n\n";
 	else
-		cout << "Test Case 6 has Failed.\n\n";
+		cout << "Test Case 7 has Failed.\n\n";
 }
 
 /***********************************************************************
- *  TEST CASE 7 - TWO NUMBER INPUT
+ *  TEST CASE 8 - TWO NUMBER INPUT
  *  Exercises the displayPossibleValues function.
  ***********************************************************************/
 void test_possValues_twoNumInput(int board[][9])
@@ -922,14 +970,14 @@ void test_possValues_twoNumInput(int board[][9])
 	assert(msg == "ERROR: Square '22' is invalid.");
 	
 	if (msg == "ERROR: Square '22' is invalid.")
-		cout << "Square '22' is invalid.\nTest Case 7 has Passed.\n\n";
+		cout << "Square '22' is invalid.\nTest Case 8 has Passed.\n\n";
 	else
-		cout << "Test Case 7 has Failed.\n\n";
+		cout << "Test Case 8 has Failed.\n\n";
 	
 }
 
 /***********************************************************************
- *  TEST CASE 8 - TWO LETTER INPUT
+ *  TEST CASE 9 - TWO LETTER INPUT
  *  Exercises the computeValues function.
  ***********************************************************************/
 void test_possValues_twoLetterInput(int board[][9])
@@ -946,13 +994,13 @@ void test_possValues_twoLetterInput(int board[][9])
 	assert(msg == "ERROR: Square 'DD' is invalid.");
 	
 	if (msg == "ERROR: Square 'DD' is invalid.")
-		cout << "Square 'DD' is invalid.\nTest Case 8 has Passed.\n\n";
+		cout << "Square 'DD' is invalid.\nTest Case 9 has Passed.\n\n";
 	else
-		cout << "Test Case 8 has Failed.\n\n";
+		cout << "Test Case 9 has Failed.\n\n";
 }
 
 /***********************************************************************
- *  TEST CASE 9 - COORDINATE FILLED
+ *  TEST CASE 10 - COORDINATE FILLED
  *  Exercises the computeValues function.
  ***********************************************************************/
 void test_possValues_coordinateFilled(int board[][9])
@@ -970,13 +1018,13 @@ void test_possValues_coordinateFilled(int board[][9])
 	assert(msg == "ERROR: Square 'I9' is filled.");
 	
 	if (msg == "ERROR: Square 'I9' is filled.")
-		cout << "Square 'I9' is filled.\nTest Case 9 has Passed.\n\n";
+		cout << "Square 'I9' is filled.\nTest Case 10 has Passed.\n\n";
 	else
-		cout << "Test Case 9 has Failed.\n\n";
+		cout << "Test Case 10 has Failed.\n\n";
 }
 
 /***********************************************************************
- *  TEST CASE 10 - INCORRECT ORDER
+ *  TEST CASE 11 - INCORRECT ORDER
  *  Exercises the computeValues function.
  ***********************************************************************/
 void test_possValues_incorrectOrder(int board[][9])
@@ -996,13 +1044,13 @@ void test_possValues_incorrectOrder(int board[][9])
 	assert(msg == "The possible values at square 'A4' are: 1, 3");
 	
 	if (msg == "The possible values at square 'A4' are: 1, 3")
-		cout << msg << ".\nTest Case 10 has Passed.\n\n";
+		cout << msg << ".\nTest Case 11 has Passed.\n\n";
 	else
-		cout << "Test Case 10 has Failed.\n\n";
+		cout << "Test Case 11 has Failed.\n\n";
 }
 
 /***********************************************************************
- *  TEST CASE 11 - SAVE SUDOKU BOARD
+ *  TEST CASE 12 - SAVE SUDOKU BOARD
  *  Exercises the writeFile function.
  ***********************************************************************/
 void test_saveSudokuBoard(int board[][9])
@@ -1014,9 +1062,9 @@ void test_saveSudokuBoard(int board[][9])
 	assert(test_writeFile);
 	
 	if (test_writeFile(board, newFileName) == true)
-		cout << "Sudoku successfully save to new file.\n Test Case 11 has Passed.\n\n";
+		cout << "Sudoku successfully save to new file.\n Test Case 12 has Passed.\n\n";
 	else
-		cout << "Test Case 11 has Failed.\n\n";
+		cout << "Test Case 12 has Failed.\n\n";
 }
 
 /***********************************************************************
