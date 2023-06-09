@@ -45,8 +45,8 @@ bool test_interact_inputE(int board[][9], char input,     // for testing when in
 						  int col, int value);
 
 void test_updateBoard(int board[][9]);                    // test case 1
-void test_updatePossValues(int board[][9]);               // test case 2
-void test_updatePossValues_noneLeft(int board[][9]);      // test case 3
+void test_correctLowercaseCoord(int board[][9]);          // test case 2
+void test_updatePossValues(int board[][9]);               // test case 3
 void test_doubleNumInput(int board[][9]);                 // test case 3
 void test_doubleLetterInput(int board[][9]);              // test case 4
 void test_reverseInputOrder(int board[][9]);              // test case 5
@@ -88,8 +88,8 @@ int main()
 	
 	// run test cases 1 - 12
 	test_updateBoard(board);
+	test_correctLowercaseCoord(board);
 	test_updatePossValues(board);
-	test_updatePossValues_noneLeft(board);
 	test_doubleNumInput(board);
 	test_doubleLetterInput(board);
 	test_reverseInputOrder(board);
@@ -343,34 +343,35 @@ void displayPossibleValues(int board[][9])
  ***********************************************************************/
 void setRowCol(string &coordinates, int &row, int &col)
 {
+
+	// should be num
 	char cRow;
+	
+	// should be letter
 	char cCol;
 
-	if (isalpha(coordinates[0])) // if a1 or A1
+	if (isalpha(coordinates[0])) // if a1 or A1 format
 	{
-		cCol = toupper(coordinates[0]); // A
-		cRow = coordinates[1]; // 1
+		cCol = toupper(coordinates[0]);
+		cRow = coordinates[1];
+		
+		// ensure coordinates = A1 only
+		coordinates[0] = cCol;
 	}
-	else  // 1a or 1A
+	else // 1a or 1A format
 	{
-		cCol = toupper(coordinates[1]); // A
-		cRow = coordinates[0]; // 1
+		cCol = toupper(coordinates[1]);
+		cRow = coordinates[0];
+		
+		// ensure coordinates = A1 only
+		coordinates[0] = cCol;
+		coordinates[1] = cRow;
 	}
-
 
 	// convert characters cRow and cCol
 	// to integer values row and col
 	row = int(cRow) - 49;
 	col = int(cCol) - 65;
-	
-	
-	// correct coordinates order for otherwise valid coordinates.
-	if (isCoordValid(row, col) && isalpha(coordinates[1]))
-	{
-		coordinates = "";
-		coordinates += cCol;
-		coordinates += cRow;
-	}
 }
  
 /***********************************************************************
@@ -773,56 +774,36 @@ void test_updateBoard(int board[][9])
 }
 
 /***********************************************************************
- *  TEST CASE 2 - UPDATE POSSIBLE VALUES
+ *  TEST CASE 2 - CORRECT LOWERCASE COORDINATE
+ *  Autocorrect a lowercase coordinate so it can still be used
+ *  to compute possible values.
+ ***********************************************************************/
+void test_correctLowercaseCoord(int board[][9])
+{;
+	string coordinates = "i5";
+	
+	int row;
+	int col;
+	setRowCol(coordinates, row, col);
+	
+	// must check if coord is valid before displaying possible values
+	string msg = test_displayPossibleValues(board, coordinates, row, col);
+	
+	assert(msg == "The possible values at square 'I5' are: 1, 5");
+
+	
+	if (msg == "The possible values at square 'I5' are: 1, 5")
+	{
+		cout << "Possible values computed for 'I5'.\nTest Case 2 has passed.\n\n";
+	}
+	else
+		cout << "Test Case 2 has Failed.\n\n";
+}
+
+ /***********************************************************************
+ *  TEST CASE 3 - UPDATE POSSIBLE VALUES
  ***********************************************************************/
 void test_updatePossValues(int board[][9])
-{
-	// valid coordinates
-	string coord_E9 = "E9";
-	
-	int row_E9;
-	int col_E9;
-	setRowCol(coord_E9, row_E9, col_E9);
-
-	// 'E9' possible values should be: 6, 8
-	string msg1 = test_displayPossibleValues(board, coord_E9, row_E9, col_E9);
-	assert(msg1 == "The possible values at square 'E9' are: 6, 8");
-	
-	string coord_E8 = "E8";
-	int row_E8;
-	int col_E8;
-	setRowCol(coord_E8, row_E8, col_E8);
-	
-	// 'E8' should have same possible values as 'E9'
-	string msg2 = test_displayPossibleValues(board, coord_E8, row_E8, col_E8);
-	assert(msg2 == "The possible values at square 'E8' are: 2, 8, 9");
-	
-	if (msg1 == "The possible values at square 'E9' are: 6, 8"
-		&& msg2 == "The possible values at square 'E8' are: 2, 8, 9")
-	{
-		// edit the board at 'E9' using 6
-		char input = 'E';
-		int value = 6;
-		
-		test_interact_inputE(board, input, coord_E9, row_E9, col_E9, value);
-
-		// check the possible values at 'E8' again
-		// can't check 'E9' b/c it is now filled
-		string msg3 = test_displayPossibleValues(board, coord_E8, row_E8, col_E8);
-		
-		// only possible value should be 6 at 'E8'.
-		assert(msg3 == "The possible values at square 'E8' are: 8");
-		
-		if (msg3 == "The possible values at square 'E8' are: 8")
-			cout << "Square 'E8' has one possible value left.\nTest Case 2 has Passed.\n\n";
-		else
-			cout << "Test Case 2 has Failed.\n\n";
-	}
-}
-/***********************************************************************
- *  TEST CASE 3 - UPDATE POSSIBLE VALUES - NONE LEFT
- ***********************************************************************/
-void test_updatePossValues_noneLeft(int board[][9])
 {
 	// valid coordinate w/one possible value left
 	string coordinates = "E5";
@@ -846,7 +827,7 @@ void test_updatePossValues_noneLeft(int board[][9])
 		// check the possible values at "E5" again
 		string msg = test_displayPossibleValues(board, coordinates, row, col);
 		
-		// there shouldn't be any possible values left
+		// cannot compute possible values b/c square is filled
 		assert(msg == "ERROR: Square 'E5' is filled.");
 		
 		if (msg == "ERROR: Square 'E5' is filled.")
