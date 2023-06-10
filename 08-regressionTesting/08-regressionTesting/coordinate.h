@@ -17,8 +17,15 @@ class Coordinate
 public:
 	void initialize();
 	void setCoordinate(string coordinate);
-	string promptCoordinate();
-	bool isCoordValid();
+	
+	bool isCoordValid() const;
+	bool isCoordFilled(vector<vector<int>> board) const;
+	
+	string promptCoordinate() const;
+	string getCoord()         const { return coord; }
+	
+	int getRow() const { return row; }
+	int getCol() const { return col; }
 	
 private:
 	string coord;

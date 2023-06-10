@@ -28,7 +28,7 @@ using namespace std;
 //int getRow(string coordinates);
 //int getCol(string coordinates);
 //void setRowCol(string &coordinates, int &row, int &col);
-int promptValue(string coordinates);
+//int promptValue(string coordinates);
 void editSquare(int board[][9]);
 bool interact(int board[][9]);
 bool writeFile(int board[][9], string newFile);

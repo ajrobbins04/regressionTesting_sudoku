@@ -17,7 +17,7 @@ void Coordinate::initialize()
  * Gets user's chosen coordinate based on the
  * sudoku board.
  ***********************************************************************/
-string Coordinate::promptCoordinate()
+string Coordinate::promptCoordinate() const
 {
    // for A1, A is the column and 1 is the row
    string coordinate;
@@ -32,9 +32,23 @@ string Coordinate::promptCoordinate()
  * Checks that the numerical part of the
  * coordinate is within the range 0 - 8.
  **********************************************************************/
-bool Coordinate::isCoordValid()
+bool Coordinate::isCoordValid() const
 {
    if (row >= 0 && row <= 8 && col >= 0 && col <= 8)
+   {
+	  return true;
+   }
+   return false;
+}
+
+/***********************************************************************
+ * IS COORD FILLED
+ * Checks that the coordinate hasn't already
+ * been filled.
+ ***********************************************************************/
+bool Coordinate::isCoordFilled(vector<vector<int>> board) const
+{
+   if (board[row][col] != 0)
    {
 	  return true;
    }

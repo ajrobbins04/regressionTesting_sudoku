@@ -35,10 +35,14 @@ public:
 	void initializeBoard(string fileName);
 	void displayBoard();
 	void computeValues(vector<int> &possible, int row, int col);
-	void displayPossibleValues(const Coordinate coord);
+	int promptValue(string coord);
+
+	string getPossibleValues(const Coordinate &coordinate);
+	string editSquare(const Coordinate &coordinate);
+	
+	vector<vector<int>> getBoard() const { return board; }
 	
 	bool readFile(string fileName);
-	bool isCoordFilled(int row, int col);
 
 	
 private:
