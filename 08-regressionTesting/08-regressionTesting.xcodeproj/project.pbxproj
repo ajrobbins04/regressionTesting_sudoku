@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		02D802882A2FA5D800CE35A0 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02D802872A2FA5D800CE35A0 /* main.cpp */; };
+		02DEF00B2A33E9C100999231 /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02DEF00A2A33E9C100999231 /* game.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +29,10 @@
 		02D802872A2FA5D800CE35A0 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		02DEF0032A328ED200999231 /* saveSudoku.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = saveSudoku.txt; sourceTree = "<group>"; };
 		02DEF0042A33882D00999231 /* altSudoku.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = altSudoku.txt; sourceTree = "<group>"; };
+		02DEF0062A3399FA00999231 /* test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
+		02DEF0092A339D5800999231 /* board.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = board.h; sourceTree = "<group>"; };
+		02DEF00A2A33E9C100999231 /* game.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = game.cpp; sourceTree = "<group>"; };
+		02DEF00C2A33F70600999231 /* coordinate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = coordinate.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +69,10 @@
 			isa = PBXGroup;
 			children = (
 				02D802872A2FA5D800CE35A0 /* main.cpp */,
+				02DEF0062A3399FA00999231 /* test.h */,
+				02DEF0092A339D5800999231 /* board.h */,
+				02DEF00A2A33E9C100999231 /* game.cpp */,
+				02DEF00C2A33F70600999231 /* coordinate.h */,
 			);
 			path = "08-regressionTesting";
 			sourceTree = "<group>";
@@ -126,6 +135,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				02D802882A2FA5D800CE35A0 /* main.cpp in Sources */,
+				02DEF00B2A33E9C100999231 /* game.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
