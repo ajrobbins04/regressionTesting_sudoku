@@ -30,14 +30,12 @@ void TestBoard::initializeTestBoard(string fileName)
 	// read the file
 	if (!readTestFile(fileName))
 	{
-	   // handle possible errors
-	   cout << "ERROR: Unable to open " << fileName << endl;
-	   return;
+	    // handle possible errors
+	    cout << "ERROR: Unable to open " << fileName << endl;
+	    return;
 	}
 	else
-	{
-		cout << "Board successfully read from file\n";
-	}
+		return;
 }
 
 /***********************************************************************
@@ -142,27 +140,18 @@ bool TestBoard::test_interact(char input)
 	switch (input)
 	{
 	   case '?':
-		  displayOptions();       // show list of options
+		  displayOptions();        // show list of options
 		  cout << endl << endl;
 		  return true;
 	   case 'D':
-		  test_displayBoard();         // show sudoku board
+		  test_displayBoard();     // show sudoku board
 		  cout << endl;
 		  return true;
 	   case 'E':
-		  editSquare();           // add new value onto board
-		  cout << endl;           // then return to main interface
-		  test_displayBoard();
-		  cout << endl;
-		  displayOptions();
-		  cout << endl;
+		  editSquare();            // add new value onto board
 		  return true;
 	   case 'S':
 		  displayPossibleValues(); // show possible values
-		  cout << endl;            // then return to main interface
-		  test_displayBoard();
-		  cout << endl;
-		  displayOptions();
 		  cout << endl;
 		  return true;
 	   case 'Q': // Quit program
@@ -193,18 +182,10 @@ bool TestBoard::test_interact_inputE(char input, Coordinate &coord, int value)
 		 return true;
 	  case 'E':
 		 test_editSquare(coord, value);   // add new value onto board
-		 cout << endl;                    // then return to main interface
-		 test_displayBoard();
-		 cout << endl;
-		 displayOptions();
 		 cout << endl;
 		 return true;
 	  case 'S':
 		 displayPossibleValues(); // show possible values
-		 cout << endl;            // then return to main interface
-		 test_displayBoard();
-		 cout << endl;
-		 displayOptions();
 		 cout << endl;
 		 return true;
 	  case 'Q': // Quit program
