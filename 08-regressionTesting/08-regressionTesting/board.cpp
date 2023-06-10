@@ -334,6 +334,7 @@ string Board::promptFileName()
 	
 	return fileName;
 }
+
 /***********************************************************************
  * WRITE FILE
  * Write the sudoku board to its destination file.

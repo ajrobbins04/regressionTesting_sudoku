@@ -17,6 +17,10 @@ class Coordinate
 public:
 	Coordinate(): coord(""), row(-1), col(-1) {}
 	
+	Coordinate(string coord) {
+		setCoordinate(coord);
+	}
+	
 	void initialize();
 	void setCoordinate(string coordinate);
 	
