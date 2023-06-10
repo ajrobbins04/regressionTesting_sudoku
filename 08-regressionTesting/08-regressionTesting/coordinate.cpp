@@ -7,9 +7,10 @@
  ***********************************************************************/
 void Coordinate::initialize()
 {
-	// if coord was A1, then A would be the
-	// column and 1 would be the row.
+	// if coordinate was A1, then A would be
+	// the column and 1 would be the row.
 	string coordinate = promptCoordinate();
+	setCoordinate(coordinate);
 	
 }
 /***********************************************************************
@@ -46,7 +47,7 @@ bool Coordinate::isCoordValid() const
  * Checks that the coordinate hasn't already
  * been filled.
  ***********************************************************************/
-bool Coordinate::isCoordFilled(vector<vector<int>> board) const
+bool Coordinate::isCoordFilled(int board[][9]) const
 {
    if (board[row][col] != 0)
    {

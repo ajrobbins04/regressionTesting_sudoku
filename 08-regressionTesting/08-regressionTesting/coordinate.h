@@ -15,11 +15,13 @@ using namespace std;
 class Coordinate
 {
 public:
+	Coordinate(): coord(""), row(-1), col(-1) {}
+	
 	void initialize();
 	void setCoordinate(string coordinate);
 	
 	bool isCoordValid() const;
-	bool isCoordFilled(vector<vector<int>> board) const;
+	bool isCoordFilled(int board[][9]) const;
 	
 	string promptCoordinate() const;
 	string getCoord()         const { return coord; }

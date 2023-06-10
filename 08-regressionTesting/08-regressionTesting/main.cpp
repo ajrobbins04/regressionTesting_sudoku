@@ -10,7 +10,7 @@
 *    is then written to a new file.
 ************************************************************************/
 
-#include <iostream>
+/*#include <iostream>
 #include <iomanip>
 #include <fstream>
 #include <string>
@@ -29,7 +29,7 @@ using namespace std;
 //int getCol(string coordinates);
 //void setRowCol(string &coordinates, int &row, int &col);
 //int promptValue(string coordinates);
-void editSquare(int board[][9]);
+//void editSquare(int board[][9]);
 bool interact(int board[][9]);
 bool writeFile(int board[][9], string newFile);
 
@@ -62,7 +62,7 @@ void test_readFile(int board[][9]);                       // test case 13
  * Driver function for a program which runs a
  * game of Sudoku.
  **********************************************************************/
-int main()
+/*int main()
 {
     int board[9][9]; // stores sudoku board
    
@@ -104,153 +104,10 @@ int main()
 }
 
 /***********************************************************************
- * PROMPT VALUE
- * Returns the value that the user wants to place in a
- * given coordinate.
- ***********************************************************************/
-int promptValue(string coordinates)
-{
-	// default value
-	int value = -1;
-	// get value at coordinate location
-    cout << "What is the value at '" << coordinates << "': ";
-    cin >> value;
-	
-	return value;
-}
-
-/***********************************************************************
- * EDIT SQUARE
- * Runs coordinates through a series of checks. If all are met,
- * value is added to the corresponding square on the board
- ***********************************************************************/
-void editSquare(int board[][9])
-{
-   
-    // get coordinates
-    string coordinates = promptCoordinates();
-	
-	// -1 = default temporary value
-	int row = -1;
-	int col = -1;
-
-	setRowCol(coordinates, row, col);
- 
-   // coordinates cannot be out of range
-   if (!isCoordValid(row, col))
-   {
-	   cout << "ERROR: Square '" << coordinates << "' is invalid.\n";
-	   cout << "Press 'E' to try again.\n";
-	   return;
-   }
-
-   // check if square is filled
-   if (isCoordFilled(board, row, col))
-   {
-	   cout << "ERROR: Square '" << coordinates << "' is filled.\n";
-	   cout << "Press 'E' to try again.\n";
-	   return;
-   }
-	  
-	int value = promptValue(coordinates);
-
-   // check if value is in range
-   if (value < 0 || value > 9)
-   {
-	   cout << "ERROR: Value '" << value << "' in square '" << coordinates
-		    << "' is invalid\n";
-	   cout << "Press 'E' to try again.\n";
-	  return;
-   }
-
-   int possible[9];
-   computeValues(board, possible, row, col); // check if chosen value
-											 // has already been used
-
-   if (possible[value - 1] == 0) // index will be set to 0 if value is used
-   {
-	   cout << "ERROR: Value '" << value << "' in square '" << coordinates
-		    << "' is invalid\n";
-	   cout << "Press 'E' to try again.\n";
-	  return;
-   }
-
-   // add value to its coordinate location
-   board[row][col] = value;
-	   
-}
-
-/***********************************************************************
- * INTERACT
- * User chooses their input from a series of options
- ***********************************************************************/
-bool interact(int board[][9])
-{
-   char input;
-   cout << "> ";
-   cin >> input;
-	  
-   input = toupper(input);
-
-   switch (input)
-   {
-	  case '?':
-		 displayOptions(); // show list of options
-		 cout << endl << endl;
-		 return true;
-	  case 'D':
-		 displayBoard(board); // show sudoku board
-		 cout << endl;
-		 return true;
-	  case 'E':
-		 editSquare(board); // add new value onto board
-		 cout << endl;
-		 return true;
-	  case 'S':
-		 displayPossibleValues(board); // show possible values
-		 cout << endl;
-		 return true;
-	  case 'Q': // Quit program
-		 return false;
-	  default:
-		 cout << "ERROR: invalid value\n";
-		 return true;
-   }
-}
-
-/***********************************************************************
- * WRITE FILE
- * Write the sudoku board to its destination file.
- ***********************************************************************/
-bool writeFile(int board[][9], string newFile)
-{
-   // open file
-   ofstream fout(newFile);
-   if (fout.fail())
-   {
-	  fout.close();
-	  return false;
-   }
-   
-   // write to file
-   for (int row = 0; row < 9; row++)
-   {
-	  for (int col = 0; col < 9; col++)
-	  {
-		 
-		 fout << board[row][col] << " ";
-	  }
-   }
-   // close file
-   fout.close();
-   return true;
-}
-
-/***********************************************************************
  * TEST DISPLAY POSSIBLE VALUES
  * Runs coordinates through a series of checks before computing possible values.
  ***********************************************************************/
-string test_displayPossibleValues(int board[][9], string coordinates, int row, int col)
+/*string test_displayPossibleValues(int board[][9], string coordinates, int row, int col)
 {
  
 	// coordinates cannot be out of range
@@ -295,7 +152,7 @@ string test_displayPossibleValues(int board[][9], string coordinates, int row, i
  * Runs coordinates through a series of checks. This version of
  * editSquare is used for testing purposes where a value is needed.
  ***********************************************************************/
-string test_editSquare(int board[][9], string coordinates, int row, int col, int value)
+/*string test_editSquare(int board[][9], string coordinates, int row, int col, int value)
 {
    // coordinates cannot be out of range
    if (!isCoordValid(row, col))
@@ -343,7 +200,7 @@ string test_editSquare(int board[][9], string coordinates, int row, int col, int
  * editSquare is used only when the provided coordinates are expected
  * to fail (so it doesn't try to check possible values).
  ***********************************************************************/
-string test_editSquare_invalidCoord(int board[][9], string coordinates, int row, int col)
+/*string test_editSquare_invalidCoord(int board[][9], string coordinates, int row, int col)
 {
    // coordinates cannot be out of range
    if (!isCoordValid(row, col))
@@ -368,7 +225,7 @@ string test_editSquare_invalidCoord(int board[][9], string coordinates, int row,
 * User chooses their input from a series of options. This version of interact is
 * used for general testing purposes.
 ***********************************************************************/
-bool test_interact(int board[][9], char input)
+/*bool test_interact(int board[][9], char input)
 {
   char inputCaps = toupper(input);
 
@@ -404,7 +261,7 @@ bool test_interact(int board[][9], char input)
 * User chooses their input from a series of options. This version of interact is
 * used when the input must be 'E'
  ************************************************************************/
-bool test_interact_inputE(int board[][9], char input, string coordinates,
+/*bool test_interact_inputE(int board[][9], char input, string coordinates,
 						  int row, int col, int value)
 {
   char inputCaps = toupper(input);
@@ -440,7 +297,7 @@ bool test_interact_inputE(int board[][9], char input, string coordinates,
  *  Verify that the board registers and displays updated squares
  *  that have been filled in.
  ***********************************************************************/
-void test_updateBoard(int board[][9])
+/*void test_updateBoard(int board[][9])
 {
 	char input = 'E';
 	string coordinates = "E1";
@@ -469,7 +326,7 @@ void test_updateBoard(int board[][9])
  *  TEST CASE 2 - CORRECT LOWERCASE INPUT
  *  Ensure that lowercase coordinates are autocorrected and used successfully.
  ***********************************************************************/
-void test_correctLowercaseInput(int board[][9])
+/*void test_correctLowercaseInput(int board[][9])
 {
 	string coordinates = "i5";
 	
@@ -497,7 +354,7 @@ void test_correctLowercaseInput(int board[][9])
  *  Check that the displayPossibleValues function doesn't compute values
  *  for  a square after it has been updated with a valid value.
  ***********************************************************************/
-void test_updatePossValues(int board[][9])
+/*void test_updatePossValues(int board[][9])
 {
 	// valid coordinate w/one possible value left
 	string coordinates = "E5";
@@ -536,7 +393,7 @@ void test_updatePossValues(int board[][9])
  *  Checks if the editSquare function handles invalid input where two numbers
  *  are added instead of valid coordinates.
  ***********************************************************************/
-void test_doubleNumInput(int board[][9])
+/*void test_doubleNumInput(int board[][9])
 {
 	string coordinates = "11";
  
@@ -560,7 +417,7 @@ void test_doubleNumInput(int board[][9])
  *  Checks if the editSquare function handles invalid input
  *  where two letters are added.
  ***********************************************************************/
-void test_doubleLetterInput(int board[][9])
+/*void test_doubleLetterInput(int board[][9])
 {
 	string coordinates = "BB";
  
@@ -584,7 +441,7 @@ void test_doubleLetterInput(int board[][9])
  *  Checks if the editSquare function can correct and use
  *  coordinates written in reverse (number first, letter last).
  ***********************************************************************/
-void test_reverseInputOrder(int board[][9])
+/*void test_reverseInputOrder(int board[][9])
 {
 	// given in reverse order
 	string coordinates = "2B";
@@ -613,7 +470,7 @@ void test_reverseInputOrder(int board[][9])
  *  Checks if the coordinate is already occupied from within
  *  the editSquare function.
  ***********************************************************************/
-void test_filledCoordinate(int board[][9])
+/*void test_filledCoordinate(int board[][9])
 {
 	// not valid b/c B1 is already filled
 	string coordinates = "B1";
@@ -638,7 +495,7 @@ void test_filledCoordinate(int board[][9])
  *  Checks if the displayPossibleValues function handles invalid
  *  input where two numbers are used.
  ***********************************************************************/
-void test_possValues_twoNumInput(int board[][9])
+/*void test_possValues_twoNumInput(int board[][9])
 {
 	string coordinates = "22";
  
@@ -663,7 +520,7 @@ void test_possValues_twoNumInput(int board[][9])
  *  Checks if the displayPossibleValues function handles invalid
  *  input where two letters are used.
  ***********************************************************************/
-void test_possValues_twoLetterInput(int board[][9])
+/*void test_possValues_twoLetterInput(int board[][9])
 {
 	string coordinates = "DD";
  
@@ -687,7 +544,7 @@ void test_possValues_twoLetterInput(int board[][9])
  *  Checks if the coordinate is already occupied from within
  *  the displayPossibleValues function.
  ***********************************************************************/
-void test_possValues_coordinateFilled(int board[][9])
+/*void test_possValues_coordinateFilled(int board[][9])
 {
 	// not valid b/c B1 is already filled
 	string coordinates = "I9";
@@ -712,7 +569,7 @@ void test_possValues_coordinateFilled(int board[][9])
  *  Checks if the displayPossibleValues function can correct and use
  *  coordinates written in reverse (number first, letter last).
  ***********************************************************************/
-void test_possValues_incorrectOrder(int board[][9])
+/*void test_possValues_incorrectOrder(int board[][9])
 {
 	// given in reverse order
 	string coordinates = "4A";
@@ -739,7 +596,7 @@ void test_possValues_incorrectOrder(int board[][9])
  *  Validates whether the writeFile function is able to successfully
  *  save the sudoku program.
  ***********************************************************************/
-void test_saveSudokuBoard()
+/*void test_saveSudokuBoard()
 {
 	int originalBoard[9][9];
 	string fileName = "/Users/AmberRobbins/CSE-270_softwareTesting/regressionTesting_sudoku/08-regressionTesting/sudoku.txt";
@@ -767,7 +624,7 @@ void test_saveSudokuBoard()
  *  Verifies that the sudoku board file containing 9 rows and 9 columns of numbers
  *  can be successfully read into the program and build as a sudoku game.
  ***********************************************************************/
-void test_readFile(int board[][9])
+/*void test_readFile(int board[][9])
 {
 	int altBoard[9][9];
 	
@@ -792,3 +649,4 @@ void test_readFile(int board[][9])
 		cout << "Test Case 13 has Failed.\n\n";
 
 }
+*/

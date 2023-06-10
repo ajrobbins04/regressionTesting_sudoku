@@ -15,7 +15,7 @@ void Board::initializeBoard(string fileName)
 	}
 	else
 	{
-		
+		cout << "Board successfully read from file\n";
 	}
 }
 
@@ -29,26 +29,35 @@ bool Board::readFile(string fileName)
 	// open file
 	ifstream fin(fileName);
 	if (fin.fail())
-		return false;
- 
-	
-	for ( string line; getline( fin, line ); )
-	{
-		stringstream ss(line);
-		
-		// holds row data
-		vector <int> row;
-		for ( int value; ss >> value; )
-		{
-			row.push_back(value);
-			board.push_back(row);
-		}
-	}
+	   return false;
 
-   // close file
-   fin.close();
-   return true;
+	// read file into board
+	for (int row = 0; row < 9; row++)
+	   for (int col = 0; col < 9; col++)
+	   {
+		  fin >> board[row][col];
+	   }
 
+	// close file
+	fin.close();
+	return true;
+}
+
+/***********************************************************************
+ * DISPLAY OPTIONS
+ * Shows available options carried out by the board to
+ * play sudoku.
+ ***********************************************************************/
+void Board::displayOptions()
+{
+   cout << "Options:\n";
+   cout << "   ?  Show these instructions\n";
+   cout << "   D  Display the board\n";
+   cout << "   E  Edit one square\n";
+   cout << "   S  Show the possible values for a square\n";
+   cout << "   Q  Save and Quit\n";
+
+   return;
 }
 
 /***********************************************************************
@@ -89,6 +98,51 @@ void Board::displayBoard()
 }
 
 /***********************************************************************
+ * INTERACT
+ * User chooses their input from a series of options
+ ***********************************************************************/
+bool Board::interact()
+{
+   char input;
+   cout << "> ";
+   cin >> input;
+	  
+   input = toupper(input);
+
+   switch (input)
+   {
+	  case '?':
+		 displayOptions();       // show list of options
+		 cout << endl << endl;
+		 return true;
+	  case 'D':
+		 displayBoard();         // show sudoku board
+		 cout << endl;
+		 return true;
+	  case 'E':
+		 editSquare();           // add new value onto board
+		 cout << endl;           // then return to main interface
+		 displayBoard();
+		 cout << endl;
+		 displayOptions();
+		 cout << endl;
+		 return true;
+	  case 'S':
+		 displayPossibleValues(); // show possible values
+		 cout << endl;            // then return to main interface
+		 displayBoard();
+		 cout << endl;
+		 displayOptions();
+		 cout << endl;
+		 return true;
+	  case 'Q': // Quit program
+		 return false;
+	  default:
+		 cout << "ERROR: invalid value\n";
+		 return true;
+   }
+}
+/***********************************************************************
  * COMPUTE VALUES
  * Identifies possible values in each row, column,
  * and 3x3 square of the sudoku board.
@@ -99,8 +153,8 @@ void Board::computeValues(vector<int> &possible, int row, int col)
    int value = 0;
 
    for (int i = 0; i < 9; i++)
-	  possible[i] = i + 1; // indexes 0-8 hold values 1-9
-						   // index + 1 = the value it holds
+	   possible.push_back(i + 1); // indexes 0-8 hold values 1-9
+						          // index + 1 = the value it holds
 						 
    // check row
    for (int c = 0; c < 9; c++)
@@ -152,15 +206,16 @@ int Board::promptValue(string coord)
 
 
 /***********************************************************************
- * GET POSSIBLE VALUES
- * Gets a set of possible values for a given coordinate.
+ * DISPLAY POSSIBLE VALUES
+ * Displays a set of possible values for a given coordinate.
  * displayPossibleValues is currenlty its only caller function.
  ***********************************************************************/
-string Board::getPossibleValues(const Coordinate &coordinate)
+string Board::displayPossibleValues()
 {
- 
+	// create and initialize coordinate
+	Coordinate coordinate = Coordinate();
+
 	string coord = coordinate.getCoord();
- 
 	int row = coordinate.getRow();
 	int col = coordinate.getCol();
  
@@ -208,11 +263,15 @@ string Board::getPossibleValues(const Coordinate &coordinate)
  * Runs coordinates through a series of checks. If all are met,
  * value is added to the corresponding square on the board
  ***********************************************************************/
-string Board::editSquare(const Coordinate &coordinate)
+string Board::editSquare()
 {
- 
+	// create and initialize coordinate
+	Coordinate coordinate = Coordinate();
+	
+	// will prompt for and set a coordinate
+	coordinate.initialize();
+	
 	string coord = coordinate.getCoord();
- 
 	int row = coordinate.getRow();
 	int col = coordinate.getCol();
  
@@ -261,4 +320,45 @@ string Board::editSquare(const Coordinate &coordinate)
 
 }
 
+/**********************************************************************
+ * GET FILE NAME
+ * Gets the name of the file containing the sudoku game, or
+ * it gets the name of the file that the game will be written to.
+ ***********************************************************************/
+string Board::promptFileName()
+{
+	string fileName;
+	
+	cout << "What file would you like to write your board to: ";
+	cin >> fileName;
+	
+	return fileName;
+}
+/***********************************************************************
+ * WRITE FILE
+ * Write the sudoku board to its destination file.
+ ***********************************************************************/
+bool Board::writeFile(string fileName)
+{
+   // open file
+   ofstream fout(fileName);
+   if (fout.fail())
+   {
+	  fout.close();
+	  return false;
+   }
+   
+   // write to file
+   for (int row = 0; row < 9; row++)
+   {
+	  for (int col = 0; col < 9; col++)
+	  {
+		 
+		 fout << board[row][col] << " ";
+	  }
+   }
+   // close file
+   fout.close();
+   return true;
+}
 

@@ -34,19 +34,22 @@ public:
 	
 	void initializeBoard(string fileName);
 	void displayBoard();
+	void displayOptions();
+	bool interact();
 	void computeValues(vector<int> &possible, int row, int col);
 	int promptValue(string coord);
 
-	string getPossibleValues(const Coordinate &coordinate);
-	string editSquare(const Coordinate &coordinate);
+	string displayPossibleValues();
+	string editSquare();
 	
-	vector<vector<int>> getBoard() const { return board; }
-	
+	string promptFileName();
 	bool readFile(string fileName);
+	bool writeFile(string fileName);
+
 
 	
 private:
-	vector<vector<int>> board;
+	int board[9][9];
 	
 };
 
