@@ -15,7 +15,7 @@ void Board::initializeBoard(string fileName)
 	}
 	else
 	{
-		cout << "Board successfully read from file\n";
+		cout << "Board successfully read from file\n\n";
 	}
 }
 

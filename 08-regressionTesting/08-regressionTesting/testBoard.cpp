@@ -386,6 +386,9 @@ void TestBoard::test_updateBoard()
 	int row = coordinate.getRow();
 	int col = coordinate.getCol();
 	
+	// display original board
+	test_interact('D');
+	
 	// E1 is currently empty
 	assert(tBoard[row][col] == 0);
 
