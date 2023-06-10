@@ -309,7 +309,7 @@ string TestBoard::test_editSquare(Coordinate &coordinate, int value)
 	   }
 	}
 	
-	string passMsg = "The square at '" + coord + "' was edited using " + strValue + ".";
+	string passMsg = "The square at '" + coord + "' was filled using " + strValue + ".";
 	return passMsg;
 
 }
@@ -390,7 +390,7 @@ string TestBoard::test_displayPossibleValues(Coordinate &coordinate)
 	values.pop_back(); //removes ", " after last value
 	values.pop_back();
 	
-	string valuesMsg = "The possible values for '" + coord + "' are: " + values + "\n\n";
+	string valuesMsg = "The possible values at square '" + coord + "' are: " + values;
 
 	return valuesMsg;
 }
@@ -430,8 +430,6 @@ void TestBoard::test_correctLowercaseInput()
 	Coordinate coordinate = Coordinate("i5");
 	
 	string coord = coordinate.getCoord();
-	int row = coordinate.getRow();
-	int col = coordinate.getCol();
 	
 	// must check if coord is valid before displaying possible values
 	string msg = test_displayPossibleValues(coordinate);
@@ -552,9 +550,9 @@ void TestBoard::test_reverseInputOrder()
 	string msg = test_editSquare(coordinate, 1);
 	
 	// check that coordinate order is fixed.
-	assert(msg == "The square at 'B2' was edited.");
+	assert(msg == "The square at 'B2' was filled using 1.");
 	
-	if (msg == "The square at 'B2' was edited.")
+	if (msg == "The square at 'B2' was filled using 1.")
 		cout << msg << "\nTest Case 6 has Passed.\n\n";
 	else
 		cout << "Test Case 6 has Failed.\n\n";
@@ -645,11 +643,8 @@ void TestBoard::test_possValues_twoLetterInput()
 void TestBoard::test_possValues_coordinateFilled()
 {
 	// not valid b/c B1 is already filled
-	Coordinate coordinate = Coordinate("DD");
-
+	Coordinate coordinate = Coordinate("I9");
 	string coord = coordinate.getCoord();
-	int row = coordinate.getRow();
-	int col = coordinate.getCol();
   
 	string msg = test_displayPossibleValues(coordinate);
 	

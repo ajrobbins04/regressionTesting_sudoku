@@ -22,11 +22,11 @@ public:
 		string fileName =
 		"/Users/AmberRobbins/CSE-270_softwareTesting/regressionTesting_sudoku/08-regressionTesting/sudoku.txt";
 		
-		initializeBoard(fileName);
+		initializeTestBoard(fileName);
 	}
 	
 	TestBoard(string fileName){
-		initializeBoard(fileName);
+		initializeTestBoard(fileName);
 	}
 	
 	void run();
