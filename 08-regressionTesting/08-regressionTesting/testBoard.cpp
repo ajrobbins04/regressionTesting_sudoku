@@ -322,10 +322,7 @@ string TestBoard::test_editSquare(Coordinate &coordinate, int value)
  ***********************************************************************/
 string TestBoard::test_editSquare_invalidCoord(Coordinate &coordinate)
 {
-	
 	string coord = coordinate.getCoord();
-	int row = coordinate.getRow();
-	int col = coordinate.getCol();
  
 	// coordinates cannot be out of range
 	if (!coordinate.isCoordValid())
@@ -404,13 +401,20 @@ void TestBoard::test_updateBoard()
 {
 	Coordinate coordinate = Coordinate("E1");
 
+	// get coordinate's row and column values
 	int row = coordinate.getRow();
 	int col = coordinate.getCol();
+	
+	// E1 is currently empty
+	assert(tBoard[row][col] == 0);
 
+	// call editSquare from within its caller function
 	test_interact_inputE('E', coordinate, 4);
-
+	
+	// display the new board
 	test_interact('D');
 	
+	// E1 is now filled using 4
 	assert(tBoard[row][col] == 4);
 	
 	if (tBoard[row][col] == 4)
