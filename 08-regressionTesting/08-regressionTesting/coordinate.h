@@ -7,45 +7,24 @@
 #define coordinate_h
 
 #include <string>
+#include <iostream>
+#include <iomanip>
+
+using namespace std;
 
 class Coordinate
 {
 public:
-	string promptCoordinates();
+	void initialize();
+	void setCoordinate(string coordinate);
+	string promptCoordinate();
+	bool isCoordValid();
 	
 private:
+	string coord;
 	int row;
 	int col;
 };
 
-/***********************************************************************
- * PROMPT COORDINATES
- * Gets users coordinates corresponding to
- * squares on the sudoku board.
- ***********************************************************************/
-string Coordinate::promptCoordinates()
-{
-   // for A1, A is the column and 1 is the row
-   string coordinates;
-   cout << "What are the coordinates of the square: ";
-   cin >> coordinates;
+#endif
 
-   return coordinates;
-}
-
-/**********************************************************************
- * IS COORD VALID
- * Checks that the numerical part of the
- * coordinate is within the range 0 - 8.
- **********************************************************************/
-bool Coordinate::isCoordValid(int row, int col)
-{
-   if (row >= 0 && row <= 8 && col >= 0 && col <= 8)
-   {
-	  return true;
-   }
-   return false;
-}
-
-
-#endif /* coordinate_h */

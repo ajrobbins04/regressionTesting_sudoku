@@ -24,10 +24,10 @@ using namespace std;
 //bool isCoordValid(int row, int col);
 //bool isCoordFilled(int board[][9], int row, int col);
 //void computeValues(int board[][9], int possible[], int row, int col);
-void displayPossibleValues(int board[][9]);
-int getRow(string coordinates);
-int getCol(string coordinates);
-void setRowCol(string &coordinates, int &row, int &col);
+//void displayPossibleValues(int board[][9]);
+//int getRow(string coordinates);
+//int getCol(string coordinates);
+//void setRowCol(string &coordinates, int &row, int &col);
 int promptValue(string coordinates);
 void editSquare(int board[][9]);
 bool interact(int board[][9]);
@@ -103,45 +103,6 @@ int main()
    return 0;
 }
 
-
-/***********************************************************************
- * SET ROW COLUMN
- * Sets the integer value of the row and the column that each
- * corresponds the given coordinates.
- ***********************************************************************/
-void setRowCol(string &coordinates, int &row, int &col)
-{
-
-	// should be num
-	char cRow;
-	
-	// should be letter
-	char cCol;
-
-	if (isalpha(coordinates[0])) // if a1 or A1 format
-	{
-		cCol = toupper(coordinates[0]);
-		cRow = coordinates[1];
-		
-		// ensure coordinates = A1 only
-		coordinates[0] = cCol;
-	}
-	else // 1a or 1A format
-	{
-		cCol = toupper(coordinates[1]);
-		cRow = coordinates[0];
-		
-		// ensure coordinates = A1 only
-		coordinates[0] = cCol;
-		coordinates[1] = cRow;
-	}
-
-	// convert characters cRow and cCol
-	// to integer values row and col
-	row = int(cRow) - 49;
-	col = int(cCol) - 65;
-}
- 
 /***********************************************************************
  * PROMPT VALUE
  * Returns the value that the user wants to place in a
